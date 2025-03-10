@@ -6,8 +6,8 @@ const ProductPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   return (
     <div>
-      <h1>Course Details</h1>
-      <p>Showing details for course ID: {id}</p>
+      <h1>Szczegóły Kursu</h1>
+      <p>Pokazuje szczegóły kursów ID: {id}</p>
     </div>
   );
 };
