@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 // Endpoint to create a PaymentIntent
-app.post('/create-payment-intent', async (req, res) => {
+app.post('/api/create-payment-intent', async (req, res) => {
   try {
     const { amount } = req.body; // Amount in cents (e.g., 9999 for $99.99)
 
