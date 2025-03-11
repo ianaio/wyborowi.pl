@@ -13,7 +13,7 @@ app.use(express.json());
 
 // CORS setup (to allow front-end to communicate with backend)
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://www.wyborowi.pl:3000'); // Update with your front-end URL
+  res.header('Access-Control-Allow-Origin', 'https://www.wyborowi.pl:3000'); // Update with your front-end URL
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
