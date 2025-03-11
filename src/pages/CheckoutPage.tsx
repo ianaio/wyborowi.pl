@@ -13,7 +13,7 @@ const CheckoutPage = () => {
     if (!stripe || !elements) return;
 
     setLoading(true);
-    const response = await fetch('https://www.wyborowi.pl:3001/api/create-payment-intent', {
+    const response = await fetch('https://www.wyborowi.pl/api/create-payment-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: 9999 }),
