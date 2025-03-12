@@ -5,7 +5,6 @@ import HomePage from './pages/HomePage';
 import ProductList from './pages/ProductList';
 import ProductPage from './pages/ProductPage';
 import CheckoutPage from './pages/CheckoutPage';
-import PaymentsPage from './pages/PaymentsPage'; // Add this import
 
 function App() {
   return (
@@ -16,11 +15,9 @@ function App() {
         <Route path="/kursy" element={<ProductList />} />
         <Route path="/kursy/:id" element={<ProductPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/payments" element={<PaymentsPage />} /> {/* Add this route */}
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
