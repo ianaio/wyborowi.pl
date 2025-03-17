@@ -12,6 +12,7 @@
     "url": "git+https://github.com/ianaio/wyborowi.pl.git"
   },
   "keywords": [
+    "backend",
     "typescript",
     "postgress",
     "e-commerce",
