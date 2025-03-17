@@ -4,8 +4,13 @@ import react from '@vitejs/plugin-react-swc';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000, // Local dev port
-    host: '0.0.0.0', // Expose to network (for remote server)
-    allowedHosts: ['www.wyborowi.pl'], // Allow your domain
+    port: 3000,
+    host: '0.0.0.0',
+    allowedHosts: ['www.wyborowi.pl'],
+    hmr: {
+      protocol: 'wss', // Use WebSocket Secure
+      // host: 'www.wyborowi.pl', // Remove explicit host/port binding; rely on proxy
+      // port: 443, // Proxy handles WSS on 443 // Nginx will upgrade to WSS externally
+    },
   },
 });

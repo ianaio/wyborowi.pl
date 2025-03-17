@@ -7,14 +7,14 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get('http://www.wyborowi.pl:3001/api/products')
+    axios.get('https://www.wyborowi.pl:3001/api/products')
       .then(response => setProducts(response.data))
       .catch(err => setError('Failed to fetch products: ' + err.message));
   }, []);
 
   return (
     <div>
-      <h1>GROM Training</h1>
+      <h1>Szkolenia Bojowe Online - Grom | Navy Seal | Delta Force/</h1>
       {error ? (
         <p>{error}</p>
       ) : (
