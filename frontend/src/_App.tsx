@@ -10,26 +10,21 @@ const App = () => {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/login", {  // Relative path, proxied by Nginx
+      const response = await fetch("http://localhost:3001/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || `HTTP error ${response.status}`);
-      }
       const data = await response.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);
+      if (response.ok && data.token) {
+        localStorage.setItem("token", data.token); // Store JWT
         setIsLoggedIn(true);
         setError("");
       } else {
-        setError("No token received");
+        setError(data.error || "Login failed");
       }
-    } catch (err: any) {
-      setError(err.message || "Network error");
-      console.error("Login error:", err);
+    } catch (err) {
+      setError("Network error");
     }
   };
 
