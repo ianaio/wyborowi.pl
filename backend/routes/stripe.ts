@@ -106,11 +106,11 @@ router.post(
         customer_email: userEmail,
       });
 
-      await pool.query(
-        "INSERT INTO payments (user_email, product_id, stripe_session_id, amount, status) VALUES ($1, $2, $3, $4, $5)",
-        [userEmail, productId, session.id, price, "pending"]
-      );
-
+	await pool.query(
+	  "INSERT INTO payments (user_email, product_id, stripe_session_id, amount, status, currency) VALUES ($1, $2, $3, $4, $5, $6)",
+  	[userEmail, productId, session.id, price, "pending", "pln"]
+	);      
+   
       res.json({ url: session.url });
     } catch (e) {
       console.error("Stripe error:", e);

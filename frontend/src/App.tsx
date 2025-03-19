@@ -1,4 +1,6 @@
+// src/App.tsx
 import { useState, FormEvent, useEffect } from "react";
+import CheckoutButton from "./components/CheckoutButton"; // Import the new component
 import "./App.css";
 
 const App = () => {
@@ -34,33 +36,6 @@ const App = () => {
     }
   };
 
-  const handleCheckout = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId: "grom-concealed-carry" }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || `HTTP error ${response.status}`);
-      }
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url; // Redirect to Stripe Checkout
-      } else {
-        setError("No checkout URL received");
-      }
-    } catch (err: any) {
-      setError(err.message || "Checkout failed");
-      console.error("Checkout error:", err);
-    }
-  };
-
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     if (query.get("success")) {
@@ -92,12 +67,7 @@ const App = () => {
                   <h5 className="text-white">149.99 PLN</h5>
                 </div>
               </div>
-              <button
-                onClick={handleCheckout}
-                className="mt-4 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
-              >
-                Checkout
-              </button>
+              <CheckoutButton /> {/* Use the new component */}
               {error && <p className="text-red-500 mt-4">{error}</p>}
             </div>
           )}
