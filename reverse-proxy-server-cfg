@@ -1,0 +1,87 @@
+root@rp:/etc/nginx/sites-enabled# cat www.wyborowi.pl 
+server {
+
+        server_name www.wyborowi.pl;
+
+        location / {
+
+                include /etc/nginx/proxy_params;
+
+                proxy_pass http://wwwwyborowipl.lxd:3000/;
+
+        }
+
+	location /api/ {
+        	proxy_pass http://wwwwyborowipl.lxd:3001;
+        	real_ip_header proxy_protocol;
+        	set_real_ip_from 127.0.0.1;
+	}
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/www.wyborowi.pl/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/www.wyborowi.pl/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = www.wyborowi.pl) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+        listen 80;
+        listen [::]:80;
+
+        server_name www.wyborowi.pl;
+    return 404; # managed by Certbot
+
+
+}
+
++++++++++++++++++++++++++++++++++++++++
+
+cat /etc/systemd/system/wyborowipl.service
+[Unit]
+Description=Wyborowi.pl Frontend Production Service
+Documentation=https://docs.iana.io/systemd
+After=network.target
+
+[Service]
+Environment=PORT=3000
+Type=simple
+User=root
+WorkingDirectory=/root/ianaio/website/wyborowi.pl/frontend
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
+++++++++++++++++++++++++++++++++++++++++
+
+cat /etc/systemd/system/wyborowipl-backend.service
+[Unit]
+Description=Wyborowi.pl Backend Service
+Documentation=https://docs.iana.io/systemd
+After=network.target
+
+[Service]
+Environment=NODE_PORT=3001
+Type=simple
+User=root
+WorkingDirectory=/root/ianaio/website/wyborowi.pl/backend
+Environment="NODE_ENV=production"
+EnvironmentFile=/root/ianaio/website/wyborowi.pl/backend/.env
+ExecStart=/usr/bin/npx ts-node index.ts
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
