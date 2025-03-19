@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useState, FormEvent, useEffect } from "react";
-import CheckoutButton from "./components/CheckoutButton";
+import CheckoutButton from "./components/CheckoutButton"; // Import the new component
 import "./App.css";
 
 const App = () => {
@@ -26,7 +26,6 @@ const App = () => {
       if (data.token) {
         localStorage.setItem("token", data.token);
         setIsLoggedIn(true);
-        setEmail(email); // Keep email after login
         setError("");
       } else {
         setError("No token received");
@@ -37,29 +36,7 @@ const App = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    setEmail("");
-    setMessage("");
-    setError("");
-  };
-
   useEffect(() => {
-    // Check token on mount to persist login state
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Optionally validate token with backend here
-      setIsLoggedIn(true);
-      // Extract email from token (assuming JWT with email in payload)
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        setEmail(payload.email || "");
-      } catch (err) {
-        console.error("Failed to parse token:", err);
-      }
-    }
-
     const query = new URLSearchParams(window.location.search);
     if (query.get("success")) {
       setMessage("Order placed! You will receive an email confirmation.");
@@ -73,15 +50,7 @@ const App = () => {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-2xl border border-white/20">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl text-white font-bold">Dashboard 2025</h1>
-            <button
-              onClick={handleLogout}
-              className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-            >
-              Logout
-            </button>
-          </div>
+          <h1 className="text-3xl text-white font-bold mb-4">Dashboard 2025</h1>
           <p className="text-white">Welcome, {email}!</p>
           {message ? (
             <p className="text-white mt-4">{message}</p>
@@ -98,7 +67,7 @@ const App = () => {
                   <h5 className="text-white">149.99 PLN</h5>
                 </div>
               </div>
-              <CheckoutButton />
+              <CheckoutButton /> {/* Use the new component */}
               {error && <p className="text-red-500 mt-4">{error}</p>}
             </div>
           )}
