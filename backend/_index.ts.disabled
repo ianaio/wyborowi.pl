@@ -2,7 +2,6 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import stripeRoutes from "./routes/stripe";
-import authRoutes from "./routes/auth"; // Import auth routes
 
 const app = express();
 
@@ -22,9 +21,8 @@ app.use(
 
 app.use(express.json());
 
-// Mount routes
+// Mount Stripe routes
 app.use("/api", stripeRoutes);
-app.use("/api", authRoutes); // Add auth routes
 
 // Start server
 const port = process.env.NODE_PORT || 3001;

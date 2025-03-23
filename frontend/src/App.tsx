@@ -46,18 +46,29 @@ const App = () => {
   };
 
   useEffect(() => {
-    // Check token on mount to persist login state
     const token = localStorage.getItem("token");
     if (token) {
-      // Optionally validate token with backend here
-      setIsLoggedIn(true);
-      // Extract email from token (assuming JWT with email in payload)
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        setEmail(payload.email || "");
-      } catch (err) {
-        console.error("Failed to parse token:", err);
-      }
+      fetch("/api/verify-token", {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error("Token invalid or expired");
+          }
+        })
+        .then((data) => {
+          setIsLoggedIn(true);
+          setEmail(data.email || ""); // Assuming backend returns email
+        })
+        .catch((err) => {
+          console.error("Token validation failed:", err);
+          localStorage.removeItem("token");
+          setIsLoggedIn(false);
+          setEmail("");
+        });
     }
 
     const query = new URLSearchParams(window.location.search);
