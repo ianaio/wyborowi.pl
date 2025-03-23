@@ -1,0 +1,3 @@
+Bckp
+pg_dump -U postgres -h localhost -W wyborowiplvite > backup.sql
+
