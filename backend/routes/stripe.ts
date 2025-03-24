@@ -1,10 +1,11 @@
+// backend/routes/stripe.ts
 import express, { Request, Response, NextFunction, Router } from "express";
 import Stripe from "stripe";
 import jwt from "jsonwebtoken";
 import { pool } from "../db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-02-24.acacia", // Updated to match stripe@17.7.0
+  apiVersion: "2025-02-24.acacia",
 });
 
 interface AuthenticatedRequest extends Request {
@@ -36,7 +37,7 @@ const router = Router();
 
 router.get("/products", async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query("SELECT id, title, price, sale_price FROM products ORDER BY id");
+    const result = await pool.query("SELECT id, title, price, sale_price, type, video_url FROM products ORDER BY id");
     res.json(result.rows);
   } catch (e) {
     console.error("Products fetch error:", e);
@@ -44,6 +45,7 @@ router.get("/products", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// Rest of the file (create-checkout-session) remains unchanged
 router.post(
   "/create-checkout-session",
   authenticate,

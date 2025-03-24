@@ -1,9 +1,11 @@
-// src/components/CheckoutButton.jsx
-import React from 'react';
+// src/components/CheckoutButton.tsx
+import React from "react";
 
-const CheckoutButton = () => {
-  const product = { id: 3, title: "Wirtualny Kurs Ukrytego Noszenia GROM", video_url: "https://www.wyborowi.pl/videos/grom-concealed-carry.mp4" };
+interface CheckoutButtonProps {
+  productId: number;
+}
 
+const CheckoutButton: React.FC<CheckoutButtonProps> = ({ productId }) => {
   const handleCheckout = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -15,7 +17,7 @@ const CheckoutButton = () => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ productId: product.id }), // Uses numeric ID 3
+        body: JSON.stringify({ productId }),
       });
 
       if (!response.ok) {
@@ -25,7 +27,7 @@ const CheckoutButton = () => {
 
       const data = await response.json();
       if (data.url) {
-        window.location.href = data.url; // Redirect to Stripe
+        window.location.href = data.url;
       } else {
         console.error("No checkout URL received");
       }

@@ -3,12 +3,43 @@ import { useState, FormEvent, useEffect } from "react";
 import CheckoutButton from "./components/CheckoutButton";
 import "./App.css";
 
+interface Product {
+  id: number;
+  title: string;
+  price: number | string;  // Allow string from backend
+  sale_price?: number | string;  // Allow string from backend
+  type: string;
+  video_url?: string;
+}
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      const data = await response.json();
+      // Convert price and sale_price to numbers
+      const parsedProducts = data.map((product: Product) => ({
+        ...product,
+        price: Number(product.price),
+        sale_price: product.sale_price ? Number(product.sale_price) : undefined,
+      }));
+      setProducts(parsedProducts);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch products");
+      console.error("Products fetch error:", err);
+    }
+  };
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -26,8 +57,9 @@ const App = () => {
       if (data.token) {
         localStorage.setItem("token", data.token);
         setIsLoggedIn(true);
-        setEmail(email); // Keep email after login
+        setEmail(email);
         setError("");
+        await fetchProducts();
       } else {
         setError("No token received");
       }
@@ -43,6 +75,7 @@ const App = () => {
     setEmail("");
     setMessage("");
     setError("");
+    setProducts([]);
   };
 
   useEffect(() => {
@@ -61,7 +94,8 @@ const App = () => {
         })
         .then((data) => {
           setIsLoggedIn(true);
-          setEmail(data.email || ""); // Assuming backend returns email
+          setEmail(data.email || "");
+          fetchProducts();
         })
         .catch((err) => {
           console.error("Token validation failed:", err);
@@ -83,8 +117,8 @@ const App = () => {
   if (isLoggedIn) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-2xl border border-white/20">
-          <div className="flex justify-between items-center mb-4">
+        <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-4xl border border-white/20">
+          <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl text-white font-bold">Dashboard 2025</h1>
             <button
               onClick={handleLogout}
@@ -93,23 +127,59 @@ const App = () => {
               Logout
             </button>
           </div>
-          <p className="text-white">Welcome, {email}!</p>
+          <p className="text-white mb-4">Welcome, {email}!</p>
           {message ? (
             <p className="text-white mt-4">{message}</p>
           ) : (
             <div className="mt-6">
-              <div className="product">
-                <img
-                  src="https://i.imgur.com/EHyR2nP.png"
-                  alt="Grom Concealed Carry"
-                  className="w-32 h-32 mb-4"
-                />
-                <div className="description">
-                  <h3 className="text-white">Grom Concealed Carry</h3>
-                  <h5 className="text-white">149.99 PLN</h5>
-                </div>
-              </div>
-              <CheckoutButton />
+              {products.length > 0 ? (
+                <ul className="space-y-6">
+                  {products.map((product) => (
+                    <li key={product.id} className="flex items-center space-x-6">
+                      {product.video_url ? (
+                        <video
+                          src={product.video_url}
+                          className="w-32 h-32 object-cover rounded-lg"
+                          muted
+                          loop
+                          autoPlay
+                        />
+                      ) : (
+                        <img
+                          src="https://i.imgur.com/EHyR2nP.png"
+                          alt={product.title}
+                          className="w-32 h-32 object-cover rounded-lg"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="text-white text-lg font-semibold">{product.title}</h3>
+                        <p className="text-gray-300 text-sm capitalize">Type: {product.type}</p>
+                        <h5 className="text-white">
+                          {(product.sale_price || product.price).toFixed(2)} PLN
+                          {product.sale_price && (
+                            <span className="text-gray-400 line-through ml-2">
+                              {product.price.toFixed(2)} PLN
+                            </span>
+                          )}
+                        </h5>
+                        {product.video_url && (
+                          <a
+                            href={product.video_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline text-sm"
+                          >
+                            Preview Video
+                          </a>
+                        )}
+                        <CheckoutButton productId={product.id} />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-white">No products available.</p>
+              )}
               {error && <p className="text-red-500 mt-4">{error}</p>}
             </div>
           )}
