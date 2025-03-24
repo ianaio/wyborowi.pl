@@ -28,7 +28,7 @@
   "homepage": "https://github.com/ianaio/wyborowi.pl#readme",
   "devDependencies": {
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
+    "@types/express": "4.17.21",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.10",
     "@types/pg": "^8.11.11",

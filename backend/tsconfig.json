@@ -4,12 +4,13 @@
     "module": "commonjs",
     "outDir": "./dist",
     "rootDir": "./",
+    "moduleResolution": "node",          // Added for proper module resolution
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true            // Optional, for JSON imports if needed
   },
-  "include": ["*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts"],               // Updated to include all .ts files in subdirs
+  "exclude": ["node_modules", "dist"]
 }
-

@@ -1,11 +1,12 @@
-import express from "express";
+import express, { Request, Response, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { pool } from "../db"; // Import from db.ts
+import { pool } from "../db";
+import { QueryResult } from "pg";
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+const loginHandler: RequestHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
@@ -23,9 +24,9 @@ router.post("/login", async (req, res) => {
     console.error("Login error:", err);
     res.status(500).json({ error: "Błąd logowania" });
   }
-});
+};
 
-router.get("/verify-token", (req, res) => {
+const verifyTokenHandler: RequestHandler = (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ error: "Brak tokenu" });
@@ -34,7 +35,7 @@ router.get("/verify-token", (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string };
     pool.query("SELECT email FROM users WHERE id = $1", [decoded.id])
-      .then((result) => {
+      .then((result: QueryResult) => {
         if (result.rows.length === 0) {
           return res.status(401).json({ error: "Użytkownik nie znaleziony" });
         }
@@ -45,7 +46,9 @@ router.get("/verify-token", (req, res) => {
     console.error("Token verification failed:", err);
     res.status(401).json({ error: "Nieprawidłowy lub wygasły token" });
   }
-});
+};
+
+router.post("/login", loginHandler);
+router.get("/verify-token", verifyTokenHandler);
 
 export default router;
-

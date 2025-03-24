@@ -1,18 +1,16 @@
 import express, { Request, Response, NextFunction, Router } from "express";
 import Stripe from "stripe";
-import { pool } from "../db"; // Import from db.ts
+import jwt from "jsonwebtoken";
+import { pool } from "../db";
 
-// Stripe initialization
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-10-28.acacia" as const, // Match server.ts
+  apiVersion: "2025-02-24.acacia", // Updated to match stripe@17.7.0
 });
 
-// Authenticated request interface
 interface AuthenticatedRequest extends Request {
   user?: { id: number; email: string };
 }
 
-// Authentication middleware
 const authenticate = (
   req: AuthenticatedRequest,
   res: Response,
@@ -24,7 +22,7 @@ const authenticate = (
     return;
   }
   const jwtSecret = process.env.JWT_SECRET || "5291938afacd8ceff77c6f889664353574aecff43374661641d19284c5f23a6d";
-  jwt.verify(token, jwtSecret, (err, user) => {
+  jwt.verify(token, jwtSecret, (err: jwt.VerifyErrors | null, user: any) => {
     if (err) {
       res.status(403).json({ error: "Nieprawidłowy token" });
       return;
@@ -35,6 +33,16 @@ const authenticate = (
 };
 
 const router = Router();
+
+router.get("/products", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await pool.query("SELECT id, title, price, sale_price FROM products ORDER BY id");
+    res.json(result.rows);
+  } catch (e) {
+    console.error("Products fetch error:", e);
+    res.status(500).json({ error: "Błąd pobierania produktów" });
+  }
+});
 
 router.post(
   "/create-checkout-session",
@@ -87,4 +95,3 @@ router.post(
 );
 
 export default router;
-

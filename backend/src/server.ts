@@ -4,13 +4,12 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import cors from "cors";
 import "dotenv/config";
-import { pool } from "../db"; // Import pool from db.ts
-import stripeRoutes from "../routes/stripe"; // Adjust path
-import authRoutes from "../routes/auth"; // Adjust path
+import { pool } from "../db";
+import stripeRoutes from "../routes/stripe";
+import authRoutes from "../routes/auth";
 
 const app = express();
 
-// CORS setup
 const allowedOrigins = ["https://www.wyborowi.pl"];
 app.use(
   cors({
@@ -26,17 +25,14 @@ app.use(
 
 app.use(express.json());
 
-// Stripe initialization
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-10-28.acacia" as const, // Keep your version
+  apiVersion: "2025-02-24.acacia", // Updated to match stripe@17.7.0
 });
 
-// Authenticated request interface
 interface AuthenticatedRequest extends Request {
   user?: { id: number; email: string };
 }
 
-// Authentication middleware
 const authenticate = (
   req: AuthenticatedRequest,
   res: Response,
@@ -58,11 +54,8 @@ const authenticate = (
   });
 };
 
-// Mount routes
-app.use("/api", authRoutes); // Add auth routes
-app.use("/api", stripeRoutes); // Existing stripe routes
+app.use("/api", authRoutes);
+app.use("/api", stripeRoutes);
 
-// Start server
 const port = process.env.NODE_PORT || 3001;
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
