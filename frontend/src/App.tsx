@@ -1,7 +1,9 @@
 // src/App.tsx
 import { useState, FormEvent, useEffect } from "react";
 import CheckoutButton from "./components/CheckoutButton";
-import Navbar from "./components/Navbar"; // Import Navbar
+import Navbar from "./components/Navbar";
+import ProductCard from "./components/ProductCard";
+import Footer from "./components/Footer";
 import "./App.css";
 
 interface Product {
@@ -79,6 +81,7 @@ const App = () => {
   };
 
   useEffect(() => {
+    fetchProducts(); // Fetch products on initial load for homepage
     const token = localStorage.getItem("token");
     if (token) {
       fetch("/api/verify-token", {
@@ -115,114 +118,136 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <Navbar /> {/* Add Navbar here */}
-      {isLoggedIn ? (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-          <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-4xl border border-white/20">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-3xl text-white font-bold">Dashboard 2025</h1>
-              <button
-                onClick={handleLogout}
-                className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-              >
-                Logout
-              </button>
-            </div>
-            <p className="text-white mb-4">Welcome, {email}!</p>
-            {message ? (
-              <p className="text-white mt-4">{message}</p>
-            ) : (
-              <div className="mt-6">
-                {products.length > 0 ? (
-                  <ul className="space-y-6">
-                    {products.map((product) => (
-                      <li key={product.id} className="flex items-center space-x-6">
-                        {product.video_url ? (
-                          <video
-                            src={product.video_url}
-                            className="w-32 h-32 object-cover rounded-lg"
-                            muted
-                            loop
-                            autoPlay
-                          />
-                        ) : (
-                          <img
-                            src="https://i.imgur.com/EHyR2nP.png"
-                            alt={product.title}
-                            className="w-32 h-32 object-cover rounded-lg"
-                          />
-                        )}
-                        <div className="flex-1">
-                          <h3 className="text-white text-lg font-semibold">{product.title}</h3>
-                          <p className="text-gray-300 text-sm capitalize">Type: {product.type}</p>
-                          <h5 className="text-white">
-                            {(product.sale_price || product.price).toFixed(2)} PLN
-                            {product.sale_price && (
-                              <span className="text-gray-400 line-through ml-2">
-                                {product.price.toFixed(2)} PLN
-                              </span>
-                            )}
-                          </h5>
-                          {product.video_url && (
-                            <a
-                              href={product.video_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-400 hover:underline text-sm"
-                            >
-                              Preview Video
-                            </a>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        {isLoggedIn ? (
+          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-4xl border border-white/20">
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl text-white font-bold">Dashboard 2025</h1>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                >
+                  Logout
+                </button>
+              </div>
+              <p className="text-white mb-4">Welcome, {email}!</p>
+              {message ? (
+                <p className="text-white mt-4">{message}</p>
+              ) : (
+                <div className="mt-6">
+                  {products.length > 0 ? (
+                    <ul className="space-y-6">
+                      {products.map((product) => (
+                        <li key={product.id} className="flex items-center space-x-6">
+                          {product.video_url ? (
+                            <video
+                              src={product.video_url}
+                              className="w-32 h-32 object-cover rounded-lg"
+                              muted
+                              loop
+                              autoPlay
+                            />
+                          ) : (
+                            <img
+                              src="https://i.imgur.com/EHyR2nP.png"
+                              alt={product.title}
+                              className="w-32 h-32 object-cover rounded-lg"
+                            />
                           )}
-                          <CheckoutButton productId={product.id} />
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-white">No products available.</p>
-                )}
-                {error && <p className="text-red-500 mt-4">{error}</p>}
-              </div>
-            )}
+                          <div className="flex-1">
+                            <h3 className="text-white text-lg font-semibold">{product.title}</h3>
+                            <p className="text-gray-300 text-sm capitalize">Type: {product.type}</p>
+                            <h5 className="text-white">
+                              {(product.sale_price || product.price).toFixed(2)} PLN
+                              {product.sale_price && (
+                                <span className="text-gray-400 line-through ml-2">
+                                  {product.price.toFixed(2)} PLN
+                                </span>
+                              )}
+                            </h5>
+                            {product.video_url && (
+                              <a
+                                href={product.video_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-400 hover:underline text-sm"
+                              >
+                                Preview Video
+                              </a>
+                            )}
+                            <CheckoutButton productId={product.id} />
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-white">No products available.</p>
+                  )}
+                  {error && <p className="text-red-500 mt-4">{error}</p>}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center p-4">
-          <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-md border border-white/20">
-            <h1 className="text-2xl text-white font-bold mb-6 text-center">
-              Login to Wyborowi 2025
-            </h1>
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            <form onSubmit={handleLogin}>
-              <div className="mb-4">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+        ) : (
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 py-12">
+            {/* Homepage Content */}
+            <div className="container mx-auto px-4">
+              <h1 className="text-4xl text-white font-bold text-center mb-8">
+                Wyborowi - Szkolenia Bojowe Online
+              </h1>
+              {products.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-white text-center">Ładowanie produktów...</p>
+              )}
+              {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+            </div>
+            {/* Login Section */}
+            <div className="flex items-center justify-center py-12">
+              <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-md border border-white/20">
+                <h2 className="text-2xl text-white font-bold mb-6 text-center">
+                  Login to Wyborowi 2025
+                </h2>
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+                <form onSubmit={handleLogin}>
+                  <div className="mb-4">
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                  >
+                    Log In
+                  </button>
+                </form>
               </div>
-              <div className="mb-6">
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
-              >
-                Log In
-              </button>
-            </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </main>
+      <Footer />
     </div>
   );
 };
