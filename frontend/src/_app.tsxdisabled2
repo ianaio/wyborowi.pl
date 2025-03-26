@@ -4,7 +4,6 @@ import CheckoutButton from "./components/CheckoutButton";
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 import Footer from "./components/Footer";
-import Menu from "./components/Menu"; // Import Menu
 import "./App.css";
 
 interface Product {
@@ -82,7 +81,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(); // Fetch products on initial load for homepage
     const token = localStorage.getItem("token");
     if (token) {
       fetch("/api/verify-token", {
@@ -194,6 +193,7 @@ const App = () => {
           </div>
         ) : (
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 py-12">
+            {/* Homepage Content */}
             <div className="container mx-auto px-4">
               <h1 className="text-4xl text-white font-bold text-center mb-8">
                 Wyborowi - Szkolenia Bojowe Online
@@ -209,6 +209,7 @@ const App = () => {
               )}
               {error && <p className="text-red-500 text-center mt-4">{error}</p>}
             </div>
+            {/* Login Section */}
             <div className="flex items-center justify-center py-12">
               <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-md border border-white/20">
                 <h2 className="text-2xl text-white font-bold mb-6 text-center">
@@ -243,7 +244,6 @@ const App = () => {
                 </form>
               </div>
             </div>
-            <Menu products={products} /> {/* Add Menu here */}
           </div>
         )}
       </main>

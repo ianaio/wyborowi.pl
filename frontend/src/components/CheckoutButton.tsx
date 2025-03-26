@@ -20,16 +20,15 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ productId }) => {
         body: JSON.stringify({ productId }),
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || `HTTP error ${response.status}`);
       }
 
-      const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("No checkout URL received");
+        console.error("No checkout URL received:", data);
       }
     } catch (err) {
       console.error("Checkout error:", err);
@@ -39,7 +38,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({ productId }) => {
   return (
     <button
       onClick={handleCheckout}
-      className="mt-4 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+      className="mt-4 p-3 bg-white/10 backdrop-blur-md text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all duration-300"
     >
       Checkout
     </button>
