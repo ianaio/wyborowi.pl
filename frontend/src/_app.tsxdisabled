@@ -4,8 +4,8 @@ import CheckoutButton from "./components/CheckoutButton";
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 import Footer from "./components/Footer";
-import Menu from "./components/Menu";
-import "./index.css";
+import Menu from "./components/Menu"; // Import Menu
+import "./App.css";
 
 interface Product {
   id: number;
@@ -19,6 +19,7 @@ interface Product {
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
@@ -43,7 +44,8 @@ const App = () => {
     }
   };
 
-  const handleLogin = async (email: string, password: string) => {
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
     try {
       const response = await fetch("/api/login", {
         method: "POST",
@@ -66,7 +68,7 @@ const App = () => {
       }
     } catch (err: any) {
       setError(err.message || "Network error");
-      throw err; // Re-throw to be caught in Navbar
+      console.error("Login error:", err);
     }
   };
 
@@ -118,18 +120,19 @@ const App = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar
-        isLoggedIn={isLoggedIn}
-        onLogin={handleLogin}
-        onLogout={handleLogout}
-      />
+      <Navbar />
       <main className="flex-grow">
         {isLoggedIn ? (
           <div className="min-h-screen bg-gray-900 flex items-center justify-center">
             <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-8 w-full max-w-4xl border border-white/20">
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl text-white font-bold">Dashboard 2025</h1>
-                {/* Logout moved to Navbar */}
+                <button
+                  onClick={handleLogout}
+                  className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                >
+                  Logout
+                </button>
               </div>
               <p className="text-white mb-4">Welcome, {email}!</p>
               {message ? (
@@ -206,7 +209,41 @@ const App = () => {
               )}
               {error && <p className="text-red-500 text-center mt-4">{error}</p>}
             </div>
-            <Menu products={products} />
+            <div className="flex items-center justify-center py-12">
+              <div className="backdrop-blur-md bg-white/10 p-8 rounded-xl shadow-lg w-full max-w-md border border-white/20">
+                <h2 className="text-2xl text-white font-bold mb-6 text-center">
+                  Login to Wyborowi 2025
+                </h2>
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+                <form onSubmit={handleLogin}>
+                  <div className="mb-4">
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                  >
+                    Log In
+                  </button>
+                </form>
+              </div>
+            </div>
+            <Menu products={products} /> {/* Add Menu here */}
           </div>
         )}
       </main>
