@@ -1,0 +1,9 @@
+<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="emblem">
+  <!-- Outer Circle -->
+  <circle cx="25" cy="25" r="20" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <!-- Crosshair -->
+  <line x1="25" y1="5" x2="25" y2="45" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="5" y1="25" x2="45" y2="25" stroke="#FFFFFF" stroke-width="2"/>
+  <!-- Center Dot -->
+  <circle cx="25" cy="25" r="3" fill="#FFFFFF"/>
+</svg>

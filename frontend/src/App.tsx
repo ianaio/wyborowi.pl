@@ -1,11 +1,10 @@
-// src/App.tsx
 import { useState, FormEvent, useEffect } from "react";
 import CheckoutButton from "./components/CheckoutButton";
 import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 import Footer from "./components/Footer";
 import Menu from "./components/Menu";
-import "./index.css";
+import soldierBg from "./assets/soldier-bg.svg";
 
 interface Product {
   id: number;
@@ -22,6 +21,11 @@ const App = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
+
+  const [heroTitle, setHeroTitle] = useState("MODERN MILITARY THEMED");
+  const [heroDescription, setHeroDescription] = useState(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  );
 
   const fetchProducts = async () => {
     try {
@@ -66,7 +70,7 @@ const App = () => {
       }
     } catch (err: any) {
       setError(err.message || "Network error");
-      throw err; // Re-throw to be caught in Navbar
+      throw err;
     }
   };
 
@@ -117,86 +121,95 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-military-dark">
       <Navbar
         isLoggedIn={isLoggedIn}
         onLogin={handleLogin}
         onLogout={handleLogout}
       />
+
       <main className="flex-grow">
         {isLoggedIn ? (
-          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-8 w-full max-w-4xl border border-white/20">
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl text-white font-bold">Dashboard 2025</h1>
-                {/* Logout moved to Navbar */}
-              </div>
-              <p className="text-white mb-4">Welcome, {email}!</p>
+          <>
+            <section
+              className="h-[600px] flex flex-col justify-center items-start p-10"
+              style={{
+                backgroundImage: `url(${soldierBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundBlendMode: "overlay",
+                backgroundColor: "rgba(31, 41, 55, 0.8)",
+              }}
+            >
+              <input
+                type="text"
+                value={heroTitle}
+                onChange={(e) => setHeroTitle(e.target.value)}
+                className="text-5xl md:text-7xl military-font bg-transparent border-b border-gray-500 focus:outline-none mb-4"
+              />
+              <textarea
+                value={heroDescription}
+                onChange={(e) => setHeroDescription(e.target.value)}
+                className="text-lg bg-transparent border-b border-gray-500 focus:outline-none w-full md:w-1/2 resize-none"
+                rows={3}
+              />
+              <button className="mt-6 military-font">Explore Now</button>
+            </section>
+
+            <section className="p-10">
+              <h2 className="text-3xl military-font mb-6">Dark Mode & Product</h2>
               {message ? (
                 <p className="text-white mt-4">{message}</p>
               ) : (
                 <div className="mt-6">
                   {products.length > 0 ? (
-                    <ul className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                       {products.map((product) => (
-                        <li key={product.id} className="flex items-center space-x-6">
-                          {product.video_url ? (
-                            <video
-                              src={product.video_url}
-                              className="w-32 h-32 object-cover rounded-lg"
-                              muted
-                              loop
-                              autoPlay
-                            />
-                          ) : (
-                            <img
-                              src="https://i.imgur.com/EHyR2nP.png"
-                              alt={product.title}
-                              className="w-32 h-32 object-cover rounded-lg"
-                            />
-                          )}
-                          <div className="flex-1">
-                            <h3 className="text-white text-lg font-semibold">{product.title}</h3>
-                            <p className="text-gray-300 text-sm capitalize">Type: {product.type}</p>
-                            <h5 className="text-white">
-                              {(product.sale_price || product.price).toFixed(2)} PLN
-                              {product.sale_price && (
-                                <span className="text-gray-400 line-through ml-2">
-                                  {product.price.toFixed(2)} PLN
-                                </span>
-                              )}
-                            </h5>
-                            {product.video_url && (
-                              <a
-                                href={product.video_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-400 hover:underline text-sm"
-                              >
-                                Preview Video
-                              </a>
-                            )}
-                            <CheckoutButton productId={product.id} />
-                          </div>
-                        </li>
+                        <div key={product.id} className="product-card">
+                          <ProductCard product={product} />
+                          <CheckoutButton productId={product.id} />
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   ) : (
                     <p className="text-white">No products available.</p>
                   )}
                   {error && <p className="text-red-500 mt-4">{error}</p>}
                 </div>
               )}
-            </div>
-          </div>
+            </section>
+          </>
         ) : (
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 py-12">
-            <div className="container mx-auto px-4">
-              <h1 className="text-4xl text-white font-bold text-center mb-8">
-                Wyborowi - Szkolenia Bojowe Online
-              </h1>
+          <>
+            <section
+              className="h-[600px] flex flex-col justify-center items-start p-10"
+              style={{
+                backgroundImage: `url(${soldierBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundBlendMode: "overlay",
+                backgroundColor: "rgba(31, 41, 55, 0.8)",
+              }}
+            >
+              <input
+                type="text"
+                value={heroTitle}
+                onChange={(e) => setHeroTitle(e.target.value)}
+                className="text-5xl md:text-7xl military-font bg-transparent border-b border-gray-500 focus:outline-none mb-4"
+              />
+              <textarea
+                value={heroDescription}
+                onChange={(e) => setHeroDescription(e.target.value)}
+                className="text-lg bg-transparent border-b border-gray-500 focus:outline-none w-full md:w-1/2 resize-none"
+                rows={3}
+              />
+              <button className="mt-6 military-font">Explore Now</button>
+            </section>
+
+            <section className="p-10">
+              <h2 className="text-3xl military-font mb-6">Dark Mode & Product</h2>
               {products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
@@ -205,11 +218,13 @@ const App = () => {
                 <p className="text-white text-center">Ładowanie produktów...</p>
               )}
               {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-            </div>
+            </section>
+
             <Menu products={products} />
-          </div>
+          </>
         )}
       </main>
+
       <Footer />
     </div>
   );

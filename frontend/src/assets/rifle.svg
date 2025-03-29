@@ -1,0 +1,10 @@
+<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" class="product-rifle">
+  <!-- Rifle Body -->
+  <rect x="20" y="40" width="120" height="20" fill="#2D2D2D"/>
+  <!-- Barrel -->
+  <rect x="140" y="45" width="40" height="10" fill="#1A1A1A"/>
+  <!-- Grip -->
+  <path d="M60,60 L60,80 L80,80 L80,60 Z" fill="#3A3A3A"/>
+  <!-- Scope -->
+  <rect x="80" y="30" width="20" height="10" fill="#3A3A3A"/>
+</svg>

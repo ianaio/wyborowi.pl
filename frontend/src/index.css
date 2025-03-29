@@ -71,3 +71,60 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.hero-bg {
+  background-image: url('/soldier-bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+  @apply bg-gray-800/80;
+}
+
+/* Animation for Night Vision Goggles Glow */
+@keyframes glow {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+.product-goggles .glow {
+  animation: glow 2s infinite;
+}
+
+/* Hover Animation for Rifle */
+.product-rifle:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+/* Rotate Animation for Watch Hands */
+.product-watch rect:nth-child(3) { /* Hour Hand */
+  animation: rotateHour 43200s linear infinite; /* 12 hours */
+}
+.product-watch rect:nth-child(4) { /* Minute Hand */
+  animation: rotateMinute 3600s linear infinite; /* 1 hour */
+}
+@keyframes rotateHour {
+  0% { transform: rotate(30deg); }
+  100% { transform: rotate(390deg); }
+}
+@keyframes rotateMinute {
+  0% { transform: rotate(90deg); }
+  100% { transform: rotate(450deg); }
+}
+
+/* Hover Animation for Gloves */
+.product-gloves:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}
+
+/* Pulsing Animation for Emblem */
+.emblem circle:nth-child(1) {
+  animation: pulse 3s infinite;
+}
+@keyframes pulse {
+  0% { r: 20; }
+  50% { r: 22; }
+  100% { r: 20; }
+}
+

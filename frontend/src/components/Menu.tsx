@@ -1,5 +1,8 @@
-// src/components/Menu.tsx
 import React from "react";
+import rifleSvg from "../assets/rifle.svg";
+import watchSvg from "../assets/watch.svg";
+import glovesSvg from "../assets/gloves.svg";
+import gogglesSvg from "../assets/goggles.svg";
 
 interface Product {
   id: number;
@@ -15,39 +18,49 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ products }) => {
+  const getProductSvg = (title: string) => {
+    if (title.toLowerCase().includes("rifle")) return rifleSvg;
+    if (title.toLowerCase().includes("watch")) return watchSvg;
+    if (title.toLowerCase().includes("gloves")) return glovesSvg;
+    if (title.toLowerCase().includes("goggles")) return gogglesSvg;
+    return rifleSvg; // Default
+  };
+
   return (
-    <div className="bg-gray-900 p-4">
+    <div className="bg-military-gray p-10">
       <div className="container mx-auto">
-        <h2 className="text-3xl text-white font-bold text-center mb-8">Nasze Produkty</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <h2 className="text-3xl military-font text-center mb-8">
+          Nasze Produkty
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20 transform transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(0,153,255,0.8)]"
-            >
-              <h3
-                className={`text-xl font-bold ${
-                  item.type === "course" || item.type === "bundle" ? "text-blue-400" : "text-orange-400"
-                }`}
-              >
-                {item.title}
-              </h3>
+            <div key={item.id} className="product-card">
               {item.video_url ? (
                 <video
                   src={item.video_url}
-                  className="w-full h-32 object-cover rounded-lg mt-2"
+                  className="w-full h-48 object-cover rounded-lg"
                   muted
                   loop
                   autoPlay
                   playsInline
                 />
               ) : (
-                <div
-                  className="w-full h-32 bg-cover bg-center rounded-lg mt-2"
-                  style={{ backgroundImage: `url('https://via.placeholder.com/300x150?text=${item.title}')` }}
-                ></div>
+                <img
+                  src={getProductSvg(item.title)}
+                  alt={item.title}
+                  className="w-full h-48 object-contain rounded-lg"
+                />
               )}
-              <p className="mt-2 text-sm text-gray-300">
+              <h3
+                className={`text-xl military-font mt-4 ${
+                  item.type === "course" || item.type === "bundle"
+                    ? "text-blue-400"
+                    : "text-orange-400"
+                }`}
+              >
+                {item.title}
+              </h3>
+              <p className="mt-2 text-sm text-gray-400">
                 {item.type === "course"
                   ? "Kurs szkoleniowy online."
                   : item.type === "bundle"

@@ -1,0 +1,24 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with Camouflage Pattern -->
+  <defs>
+    <pattern id="camo" patternUnits="userSpaceOnUse" width="50" height="50">
+      <path d="M0,0 L50,0 L50,50 L0,50 Z" fill="#1A1A1A"/>
+      <path d="M10,10 Q20,0 30,10 T50,10" fill="#2D2D2D"/>
+      <path d="M0,20 Q10,30 20,20 T40,20" fill="#3A3A3A"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="600" fill="url(#camo)" opacity="0.8"/>
+  
+  <!-- Soldier Silhouette -->
+  <g transform="translate(400, 100) scale(0.8)">
+    <!-- Body -->
+    <path d="M100,50 Q120,30 140,50 T180,50 Q200,70 180,100 T140,150 Q120,170 100,150 T60,100 Q40,70 60,50 Z" fill="#000000"/>
+    <!-- Head with Helmet -->
+    <path d="M100,50 Q110,30 120,50 T140,50 Q150,30 130,20 T100,20 Q70,30 80,50 Z" fill="#000000"/>
+    <!-- Rifle -->
+    <path d="M140,80 L220,60 L230,70 L150,90 Z" fill="#000000"/>
+    <!-- Legs -->
+    <path d="M100,150 L90,200 L110,200 Z" fill="#000000"/>
+    <path d="M120,150 L110,200 L130,200 Z" fill="#000000"/>
+  </g>
+</svg>
