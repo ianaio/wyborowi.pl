@@ -22,8 +22,7 @@ const App = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [loginTimeout, setLoginTimeout] = useState<NodeJS.Timeout | null>(null); // New state for timeout
+  const [showLoginForm, setShowLoginForm] = useState(false); // New state to toggle login form
 
   const soldierBg = "/assets/soldier-bg.svg";
   const rifleSvg = "/assets/rifle.svg";
@@ -36,14 +35,40 @@ const App = () => {
 
   const getProductSvg = (title: string) => {
     const lowerTitle = title.toLowerCase();
-    if (lowerTitle.includes("rifle") || lowerTitle.includes("karabin")) return rifleSvg;
-    if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) return gogglesSvg;
-    if (lowerTitle.includes("watch") || lowerTitle.includes("timepiece")) return watchSvg;
-    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) return glovesSvg;
-    if (lowerTitle.includes("czapka")) return capSvg;
-    if (lowerTitle.includes("bluza")) return hoodieSvg;
-    if (lowerTitle.includes("koszulka")) return tshirtSvg;
-    if (lowerTitle.includes("pakiet") || lowerTitle.includes("wirtualny")) return rifleSvg;
+    console.log(`Mapping title: ${title}`);
+    if (lowerTitle.includes("rifle") || lowerTitle.includes("karabin")) {
+      console.log(`Matched "rifle" or "karabin" for ${title}, using rifleSvg`);
+      return rifleSvg;
+    }
+    if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) {
+      console.log(`Matched "goggles" or "night vision" for ${title}, using gogglesSvg`);
+      return gogglesSvg;
+    }
+    if (lowerTitle.includes("watch") || lowerTitle.includes("timepiece")) {
+      console.log(`Matched "watch" or "timepiece" for ${title}, using watchSvg`);
+      return watchSvg;
+    }
+    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) {
+      console.log(`Matched "gloves" or "combat gloves" for ${title}, using glovesSvg`);
+      return glovesSvg;
+    }
+    if (lowerTitle.includes("czapka")) {
+      console.log(`Matched "czapka" for ${title}, using capSvg`);
+      return capSvg;
+    }
+    if (lowerTitle.includes("bluza")) {
+      console.log(`Matched "bluza" for ${title}, using hoodieSvg`);
+      return hoodieSvg;
+    }
+    if (lowerTitle.includes("koszulka")) {
+      console.log(`Matched "koszulka" for ${title}, using tshirtSvg`);
+      return tshirtSvg;
+    }
+    if (lowerTitle.includes("pakiet") || lowerTitle.includes("wirtualny")) {
+      console.log(`Matched "pakiet" or "wirtualny" for ${title}, using rifleSvg`);
+      return rifleSvg;
+    }
+    console.log(`No match for ${title}, defaulting to rifleSvg`);
     return rifleSvg;
   };
 
@@ -84,7 +109,7 @@ const App = () => {
         setIsLoggedIn(true);
         setEmail(email);
         setError("");
-        setShowLoginForm(false);
+        setShowLoginForm(false); // Hide login form on successful login
         await fetchProducts();
       } else {
         setError("No token received");
@@ -103,7 +128,7 @@ const App = () => {
     setMessage("");
     setError("");
     setProducts([]);
-    setShowLoginForm(false);
+    setShowLoginForm(false); // Hide login form on logout
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -112,40 +137,12 @@ const App = () => {
   };
 
   const handleMouseOver = (field: "email" | "password") => {
-    if (field === "email" && email === "Login") setEmail("");
-    if (field === "password" && password === "Password") setPassword("");
-    resetLoginTimeout(); // Reset timer on interaction
-  };
-
-  // New function to start or reset the 10-second timeout
-  const resetLoginTimeout = () => {
-    if (loginTimeout) clearTimeout(loginTimeout); // Clear existing timeout
-    const newTimeout = setTimeout(() => {
-      setShowLoginForm(false); // Revert to frontpage content after 10 seconds
-      setEmail(""); // Clear email field
-      setPassword(""); // Clear password field
-      setError(""); // Clear any error
-    }, 10000); // 10 seconds
-    setLoginTimeout(newTimeout);
-  };
-
-  // Start the timeout when the login form appears
-  useEffect(() => {
-    if (showLoginForm) {
-      resetLoginTimeout();
-    } else if (loginTimeout) {
-      clearTimeout(loginTimeout); // Clear timeout when form is hidden
-      setLoginTimeout(null);
+    if (field === "email" && email === "Login") {
+      setEmail("");
     }
-    return () => {
-      if (loginTimeout) clearTimeout(loginTimeout); // Cleanup on unmount
-    };
-  }, [showLoginForm]);
-
-  // Reset timeout on any input change
-  const handleInputChange = (setter: (value: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
-    resetLoginTimeout(); // Reset timer on input change
+    if (field === "password" && password === "Password") {
+      setPassword("");
+    }
   };
 
   useEffect(() => {
@@ -157,8 +154,11 @@ const App = () => {
         headers: { "Authorization": `Bearer ${token}` },
       })
         .then((res) => {
-          if (res.ok) return res.json();
-          throw new Error("Token invalid or expired");
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error("Token invalid or expired");
+          }
         })
         .then((data) => {
           setIsLoggedIn(true);
@@ -174,15 +174,19 @@ const App = () => {
     }
 
     const query = new URLSearchParams(window.location.search);
-    if (query.get("success")) setMessage("Order placed! You will receive an email confirmation.");
-    if (query.get("canceled")) setMessage("Order canceled -- continue shopping and checkout when ready.");
+    if (query.get("success")) {
+      setMessage("Order placed! You will receive an email confirmation.");
+    }
+    if (query.get("canceled")) {
+      setMessage("Order canceled -- continue shopping and checkout when ready.");
+    }
   }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-military-dark">
       <Navbar
         isLoggedIn={isLoggedIn}
-        onLogin={() => setShowLoginForm(true)}
+        onLogin={() => setShowLoginForm(true)} // Show login form in hero section
         onLogout={handleLogout}
       />
 
@@ -285,7 +289,7 @@ const App = () => {
                     <input
                       type="text"
                       value={email}
-                      onChange={handleInputChange(setEmail)} // Updated to reset timeout
+                      onChange={(e) => setEmail(e.target.value)}
                       onMouseOver={() => handleMouseOver("email")}
                       className="text-5xl md:text-7xl military-font bg-transparent border-b border-gray-500 focus:outline-none mb-4 text-white w-full"
                       placeholder="Login"
@@ -295,7 +299,7 @@ const App = () => {
                     <input
                       type="password"
                       value={password}
-                      onChange={handleInputChange(setPassword)} // Updated to reset timeout
+                      onChange={(e) => setPassword(e.target.value)}
                       onMouseOver={() => handleMouseOver("password")}
                       className="text-lg bg-transparent border-b border-gray-500 focus:outline-none w-full text-white"
                       placeholder="Password"
