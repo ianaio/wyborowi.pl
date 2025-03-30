@@ -23,7 +23,7 @@ const NavMenu = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="text-gray-300 hover:text-orange-400 px-4 py-2 rounded-md military-font"
           >
-            {isOpen ? "Ukryj Sklep" : "Sklep"} {/* Changed to Sklep */}
+            {isOpen ? "Ukryj Menu" : "Pokaż Menu"}
           </button>
         </div>
         <AnimatePresence>
@@ -39,12 +39,9 @@ const NavMenu = () => {
                 <a
                   key={item.label}
                   href={item.href}
-                  className="flex items-center space-x-2" // Added space-x-2 for spacing between icon and text
+                  className="flex flex-col items-center"
                 >
                   <img src={item.svg} alt={item.label} className="h-5 w-5" />
-                  <span className="text-gray-300 hover:text-orange-400 military-font">
-                    {item.label} {/* Added text on the right */}
-                  </span>
                 </a>
               ))}
             </motion.nav>
