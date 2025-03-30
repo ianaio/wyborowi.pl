@@ -1,0 +1,11 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- T-Shirt Body -->
+  <path d="M60,70 H140 V150 H60 Z" fill="#4A4A4A"/>
+  <!-- Sleeves -->
+  <path d="M60,70 L40,90 V100 L60,80 Z" fill="#4A4A4A"/>
+  <path d="M140,70 L160,90 V100 L140,80 Z" fill="#4A4A4A"/>
+  <!-- Collar -->
+  <path d="M80,70 Q100,60 120,70" stroke="#3A3A3A" stroke-width="4" fill="none"/>
+  <!-- Flag Emblem -->
+  <rect x="90" y="100" width="20" height="10" fill="#FF4500"/>
+</svg>

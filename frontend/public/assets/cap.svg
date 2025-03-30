@@ -1,0 +1,8 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Cap Shape -->
+  <path d="M50,150 Q100,50 150,150 A50,50 0 0,1 50,150 Z" fill="#4A4A4A"/>
+  <!-- Bill of the Cap -->
+  <path d="M50,150 Q100,170 150,150 L140,160 Q100,180 60,160 Z" fill="#3A3A3A"/>
+  <!-- Logo/Emblem on Front -->
+  <circle cx="100" cy="100" r="20" fill="#FF4500"/>
+</svg>
