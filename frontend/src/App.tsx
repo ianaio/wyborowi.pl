@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import ProductCard from "./components/ProductCard";
 import Footer from "./components/Footer";
 import Menu from "./components/Menu";
-import NavMenu from "./components/NavMenu"; // Import the new NavMenu component
+import NavMenu from "./components/NavMenu";
 
 interface Product {
   id: number;
@@ -27,7 +27,6 @@ const App = () => {
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
   );
 
-  // Define SVG URLs directly
   const soldierBg = "/assets/soldier-bg.svg";
   const rifleSvg = "/assets/rifle.svg";
   const watchSvg = "/assets/watch.svg";
@@ -36,9 +35,9 @@ const App = () => {
 
   const getProductSvg = (title: string) => {
     const lowerTitle = title.toLowerCase();
-    console.log(`Mapping title: ${title}`); // Log the title being mapped
-    if (lowerTitle.includes("rifle")) {
-      console.log(`Matched "rifle" for ${title}, using rifleSvg`);
+    console.log(`Mapping title: ${title}`);
+    if (lowerTitle.includes("rifle") || lowerTitle.includes("karabin")) {
+      console.log(`Matched "rifle" or "karabin" for ${title}, using rifleSvg`);
       return rifleSvg;
     }
     if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) {
@@ -49,9 +48,19 @@ const App = () => {
       console.log(`Matched "watch" or "timepiece" for ${title}, using watchSvg`);
       return watchSvg;
     }
-    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) {
-      console.log(`Matched "gloves" or "combat gloves" for ${title}, using glovesSvg`);
+    if (
+      lowerTitle.includes("gloves") ||
+      lowerTitle.includes("combat gloves") ||
+      lowerTitle.includes("czapka") || // Cap
+      lowerTitle.includes("bluza") ||  // Hoodie
+      lowerTitle.includes("koszulka")  // T-Shirt
+    ) {
+      console.log(`Matched "gloves", "czapka", "bluza", or "koszulka" for ${title}, using glovesSvg`);
       return glovesSvg;
+    }
+    if (lowerTitle.includes("pakiet") || lowerTitle.includes("wirtualny")) {
+      console.log(`Matched "pakiet" or "wirtualny" for ${title}, using rifleSvg`);
+      return rifleSvg; // Use rifleSvg for virtual training packages
     }
     console.log(`No match for ${title}, defaulting to rifleSvg`);
     return rifleSvg; // Default
@@ -186,7 +195,6 @@ const App = () => {
               <button className="mt-6 military-font">Explore Now</button>
             </section>
 
-            {/* Add the new NavMenu component here */}
             <NavMenu />
 
             <section className="p-10">
@@ -273,7 +281,6 @@ const App = () => {
               <button className="mt-6 military-font">Explore Now</button>
             </section>
 
-            {/* Add the new NavMenu component here for logged-out users */}
             <NavMenu />
 
             <section className="p-10">

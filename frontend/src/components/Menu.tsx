@@ -9,8 +9,8 @@ const Menu = ({ products }: { products: Product[] }) => {
   const getProductSvg = (title: string) => {
     const lowerTitle = title.toLowerCase();
     console.log(`Mapping title in Menu: ${title}`);
-    if (lowerTitle.includes("rifle")) {
-      console.log(`Matched "rifle" for ${title}, using rifleSvg`);
+    if (lowerTitle.includes("rifle") || lowerTitle.includes("karabin")) {
+      console.log(`Matched "rifle" or "karabin" for ${title}, using rifleSvg`);
       return rifleSvg;
     }
     if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) {
@@ -21,9 +21,19 @@ const Menu = ({ products }: { products: Product[] }) => {
       console.log(`Matched "watch" or "timepiece" for ${title}, using watchSvg`);
       return watchSvg;
     }
-    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) {
-      console.log(`Matched "gloves" or "combat gloves" for ${title}, using glovesSvg`);
+    if (
+      lowerTitle.includes("gloves") ||
+      lowerTitle.includes("combat gloves") ||
+      lowerTitle.includes("czapka") || // Cap
+      lowerTitle.includes("bluza") ||  // Hoodie
+      lowerTitle.includes("koszulka")  // T-Shirt
+    ) {
+      console.log(`Matched "gloves", "czapka", "bluza", or "koszulka" for ${title}, using glovesSvg`);
       return glovesSvg;
+    }
+    if (lowerTitle.includes("pakiet") || lowerTitle.includes("wirtualny")) {
+      console.log(`Matched "pakiet" or "wirtualny" for ${title}, using rifleSvg`);
+      return rifleSvg; // Use rifleSvg for virtual training packages
     }
     console.log(`No match for ${title}, defaulting to rifleSvg`);
     return rifleSvg; // Default
