@@ -2,6 +2,8 @@ import { useState, FormEvent } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
+// Removed: import emblem from "../assets/emblem.svg";
+
 interface NavbarProps {
   isLoggedIn: boolean;
   onLogin: (email: string, password: string) => Promise<void>;
@@ -35,7 +37,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout }: NavbarProps) => {
             <div className="flex-shrink-0 flex items-center">
               <img
                 className="h-8 w-8"
-                src="/assets/emblem.svg"
+                src="/assets/emblem.svg" // Use direct URL
                 alt="Logo"
               />
             </div>

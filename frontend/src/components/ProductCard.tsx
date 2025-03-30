@@ -1,28 +1,31 @@
-import React from "react";
-import rifleSvg from "../assets/rifle.svg";
-import watchSvg from "../assets/watch.svg";
-import glovesSvg from "../assets/gloves.svg";
-import gogglesSvg from "../assets/goggles.svg";
+import { Product } from "../App";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  sale_price?: number;
-  type: string;
-  video_url?: string;
-}
+const ProductCard = ({ product }: { product: Product }) => {
+  const rifleSvg = "/assets/rifle.svg";
+  const watchSvg = "/assets/watch.svg";
+  const glovesSvg = "/assets/gloves.svg";
+  const gogglesSvg = "/assets/goggles.svg";
 
-interface ProductCardProps {
-  product: Product;
-}
-
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const getProductSvg = (title: string) => {
-    if (title.toLowerCase().includes("rifle")) return rifleSvg;
-    if (title.toLowerCase().includes("watch")) return watchSvg;
-    if (title.toLowerCase().includes("gloves")) return glovesSvg;
-    if (title.toLowerCase().includes("goggles")) return gogglesSvg;
+    const lowerTitle = title.toLowerCase();
+    console.log(`Mapping title in ProductCard: ${title}`);
+    if (lowerTitle.includes("rifle")) {
+      console.log(`Matched "rifle" for ${title}, using rifleSvg`);
+      return rifleSvg;
+    }
+    if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) {
+      console.log(`Matched "goggles" or "night vision" for ${title}, using gogglesSvg`);
+      return gogglesSvg;
+    }
+    if (lowerTitle.includes("watch") || lowerTitle.includes("timepiece")) {
+      console.log(`Matched "watch" or "timepiece" for ${title}, using watchSvg`);
+      return watchSvg;
+    }
+    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) {
+      console.log(`Matched "gloves" or "combat gloves" for ${title}, using glovesSvg`);
+      return glovesSvg;
+    }
+    console.log(`No match for ${title}, defaulting to rifleSvg`);
     return rifleSvg; // Default
   };
 
@@ -53,8 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       >
         {product.title}
       </h3>
-      <p className="text-gray-400 text-sm capitalize mt-1">Type: {product.type}</p>
-      <p className="text-white mt-2">
+      <p className="text-gray-400">
         {(product.sale_price || product.price).toFixed(2)} PLN
         {product.sale_price && (
           <span className="text-gray-600 line-through ml-2">
@@ -62,16 +64,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </span>
         )}
       </p>
-      {product.video_url && (
-        <a
-          href={product.video_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-400 hover:underline text-sm mt-2 block"
-        >
-          Full Preview
-        </a>
-      )}
     </div>
   );
 };

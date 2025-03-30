@@ -1,75 +1,75 @@
-import React from "react";
-import rifleSvg from "../assets/rifle.svg";
-import watchSvg from "../assets/watch.svg";
-import glovesSvg from "../assets/gloves.svg";
-import gogglesSvg from "../assets/goggles.svg";
+import { Product } from "../App";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  sale_price?: number;
-  type: string;
-  video_url?: string;
-}
+const Menu = ({ products }: { products: Product[] }) => {
+  const rifleSvg = "/assets/rifle.svg";
+  const watchSvg = "/assets/watch.svg";
+  const glovesSvg = "/assets/gloves.svg";
+  const gogglesSvg = "/assets/goggles.svg";
 
-interface MenuProps {
-  products: Product[];
-}
-
-const Menu: React.FC<MenuProps> = ({ products }) => {
   const getProductSvg = (title: string) => {
-    if (title.toLowerCase().includes("rifle")) return rifleSvg;
-    if (title.toLowerCase().includes("watch")) return watchSvg;
-    if (title.toLowerCase().includes("gloves")) return glovesSvg;
-    if (title.toLowerCase().includes("goggles")) return gogglesSvg;
+    const lowerTitle = title.toLowerCase();
+    console.log(`Mapping title in Menu: ${title}`);
+    if (lowerTitle.includes("rifle")) {
+      console.log(`Matched "rifle" for ${title}, using rifleSvg`);
+      return rifleSvg;
+    }
+    if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) {
+      console.log(`Matched "goggles" or "night vision" for ${title}, using gogglesSvg`);
+      return gogglesSvg;
+    }
+    if (lowerTitle.includes("watch") || lowerTitle.includes("timepiece")) {
+      console.log(`Matched "watch" or "timepiece" for ${title}, using watchSvg`);
+      return watchSvg;
+    }
+    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) {
+      console.log(`Matched "gloves" or "combat gloves" for ${title}, using glovesSvg`);
+      return glovesSvg;
+    }
+    console.log(`No match for ${title}, defaulting to rifleSvg`);
     return rifleSvg; // Default
   };
 
   return (
-    <div className="bg-military-gray p-10">
-      <div className="container mx-auto">
-        <h2 className="text-3xl military-font text-center mb-8">
-          Nasze Produkty
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((item) => (
-            <div key={item.id} className="product-card">
-              {item.video_url ? (
-                <video
-                  src={item.video_url}
-                  className="w-full h-48 object-cover rounded-lg"
-                  muted
-                  loop
-                  autoPlay
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={getProductSvg(item.title)}
-                  alt={item.title}
-                  className="w-full h-48 object-contain rounded-lg"
-                />
+    <div className="p-10">
+      <h2 className="text-3xl military-font mb-6">Menu</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <div key={product.id} className="product-card">
+            {product.video_url ? (
+              <video
+                src={product.video_url}
+                className="w-full h-48 object-cover rounded-lg"
+                muted
+                loop
+                autoPlay
+                playsInline
+              />
+            ) : (
+              <img
+                src={getProductSvg(product.title)}
+                alt={product.title}
+                className="w-full h-48 object-contain rounded-lg"
+              />
+            )}
+            <h3
+              className={`text-xl military-font mt-4 ${
+                product.type === "course" || product.type === "bundle"
+                  ? "text-blue-400"
+                  : "text-orange-400"
+              }`}
+            >
+              {product.title}
+            </h3>
+            <p className="text-gray-400">
+              {(product.sale_price || product.price).toFixed(2)} PLN
+              {product.sale_price && (
+                <span className="text-gray-600 line-through ml-2">
+                  {product.price.toFixed(2)} PLN
+                </span>
               )}
-              <h3
-                className={`text-xl military-font mt-4 ${
-                  item.type === "course" || item.type === "bundle"
-                    ? "text-blue-400"
-                    : "text-orange-400"
-                }`}
-              >
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm text-gray-400">
-                {item.type === "course"
-                  ? "Kurs szkoleniowy online."
-                  : item.type === "bundle"
-                  ? "Pakiet kursów w promocyjnej cenie."
-                  : "Wysokiej jakości odzież taktyczna."}
-              </p>
-            </div>
-          ))}
-        </div>
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );
