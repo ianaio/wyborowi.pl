@@ -11,6 +11,7 @@ interface NavbarProps {
 const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
+  const [isLoginHovered, setIsLoginHovered] = useState(false); // New state for login button hover
 
   const menuItems = [
     {
@@ -59,6 +60,13 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
   const dotVariants = {
     initial: { left: "75%" },
     hover: { left: "50%", transition: { duration: 0.5, ease: "easeInOut" } },
+  };
+
+  // Variants for the login button text animation
+  const textVariants = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeInOut" } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.5, ease: "easeInOut" } },
   };
 
   return (
@@ -147,9 +155,22 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
             ) : (
               <button
                 onClick={onLogin}
-                className="text-gray-300 hover:text-orange-400 px-3 py-2 rounded-md text-sm font-medium military-font"
+                onMouseEnter={() => setIsLoginHovered(true)}
+                onMouseLeave={() => setIsLoginHovered(false)}
+                className="text-gray-300 hover:text-orange-400 px-3 py-2 rounded-md text-sm font-medium military-font relative"
               >
-                Login
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={isLoginHovered ? "Zaloguj" : "Brygada"}
+                    variants={textVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="inline-block"
+                  >
+                    {isLoginHovered ? "Zaloguj" : "Brygada"}
+                  </motion.span>
+                </AnimatePresence>
               </button>
             )}
           </div>

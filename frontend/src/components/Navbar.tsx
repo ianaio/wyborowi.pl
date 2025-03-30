@@ -11,7 +11,7 @@ interface NavbarProps {
 const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
-  const [isLoginHovered, setIsLoginHovered] = useState(false); // New state for login button hover
+  const [isLoginHovered, setIsLoginHovered] = useState(false);
 
   const menuItems = [
     {
@@ -34,11 +34,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
       svg: "/assets/permit.svg",
       submenu: ["WIRTUALNE SZKOLENIE PSYCHOLOGÓW"],
     },
-    {
-      label: "BROŃ PALNA",
-      svg: "/assets/firearm.svg",
-      submenu: ["PISTOLETY", "REWOLWERY", "KARABINY"],
-    },
+    // "BROŃ PALNA" removed from here
     {
       label: "AMBASADOR",
       svg: "/assets/ambassador.svg",
@@ -62,7 +58,6 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
     hover: { left: "50%", transition: { duration: 0.5, ease: "easeInOut" } },
   };
 
-  // Variants for the login button text animation
   const textVariants = {
     initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeInOut" } },
@@ -80,11 +75,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
               onMouseEnter={() => setIsLogoHovered(true)}
               onMouseLeave={() => setIsLogoHovered(false)}
             >
-              <img
-                className="h-8 w-8"
-                src="/assets/emblem.svg"
-                alt="Logo"
-              />
+              <img className="h-8 w-8" src="/assets/emblem.svg" alt="Logo" />
               <AnimatePresence>
                 {isLogoHovered && (
                   <motion.div
