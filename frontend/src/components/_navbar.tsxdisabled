@@ -41,7 +41,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout }: NavbarProps) => {
       ],
     },
     {
-      label: "WIRTUANLNE SZKOLENIE PILOTÓW DRONÓW BOJOWYCH",
+      label: "WIRTUALNE SZKOLENIE PILOTÓW DRONÓW BOJOWYCH",
       svg: "/assets/drone-training.svg",
       submenu: [],
     },
@@ -51,12 +51,17 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout }: NavbarProps) => {
       submenu: ["WIRTUALNE SZKOLENIE PSYCHOLOGÓW"],
     },
     {
+      label: "BROŃ PALNA",
+      svg: "/assets/firearm.svg",
+      submenu: ["PISTOLETY", "REWOLWERY", "KARABINY"],
+    },
+    {
       label: "AMBASADOR",
       svg: "/assets/ambassador.svg",
       submenu: [],
     },
     {
-      label: "KONTACT",
+      label: "KONTAKT", // Fixed typo from "KONTACT"
       svg: "/assets/contact.svg",
       submenu: [],
     },
