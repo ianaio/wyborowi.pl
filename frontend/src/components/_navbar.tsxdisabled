@@ -41,7 +41,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
     },
     {
       label: "X",
-      href: "https://x.com/wyborowipl",
+      href: "https://x.com/wyborowi",
       submenu: [],
     },
   ];
@@ -112,23 +112,20 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
                     className="flex flex-col items-center px-1 pt-1 text-gray-300 hover:text-orange-400 military-font"
                   >
                     {item.label === "X" ? (
-                      <>
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="h-6 w-6"
-                        >
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                        <span className="text-[10px] mt-1">x.com/wyborowipl</span>
-                      </>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="h-6 w-6"
+                      >
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
                     ) : (
-                      <>
-                        <img src={item.svg} alt={item.label} className="h-6 w-6" />
-                        <span className="text-xs mt-1">{item.label}</span>
-                      </>
+                      <img src={item.svg} alt={item.label} className="h-6 w-6" />
+                    )}
+                    {item.label !== "X" && (
+                      <span className="text-xs mt-1">{item.label}</span>
                     )}
                   </a>
                   <AnimatePresence>
