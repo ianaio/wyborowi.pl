@@ -56,10 +56,9 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
     exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
   };
 
-  // Variants for the red dot animation
   const dotVariants = {
-    initial: { left: "75%" }, // Start at right center
-    hover: { left: "50%", transition: { duration: 0.5, ease: "easeInOut" } }, // Move to center
+    initial: { left: "75%" },
+    hover: { left: "50%", transition: { duration: 0.5, ease: "easeInOut" } },
   };
 
   return (
@@ -93,7 +92,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
                     variants={dotVariants}
                     initial="initial"
                     animate="hover"
-                    exit="initial" // Reverts to initial position on exit
+                    exit="initial"
                   />
                 )}
               </AnimatePresence>

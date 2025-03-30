@@ -5,12 +5,12 @@ interface NavbarProps {
   isLoggedIn: boolean;
   onLogin: () => void;
   onLogout: () => void;
-  onLogoClick: () => void; // New prop for logo click
+  onLogoClick: () => void;
 }
 
 const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const [isLogoHovered, setIsLogoHovered] = useState(false); // State for hover effect
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   const menuItems = [
     {
@@ -56,6 +56,12 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
     exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
   };
 
+  // Variants for the red dot animation
+  const dotVariants = {
+    initial: { left: "75%" }, // Start at right center
+    hover: { left: "50%", transition: { duration: 0.5, ease: "easeInOut" } }, // Move to center
+  };
+
   return (
     <nav className="bg-military-dark shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,20 +78,25 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout, onLogoClick }: NavbarProps) => 
                 src="/assets/emblem.svg"
                 alt="Logo"
               />
-              {isLogoHovered && (
-                <div
-                  className="absolute"
-                  style={{
-                    top: "50%",
-                    left: "75%", // Positioned in the right center
-                    transform: "translate(-50%, -50%)",
-                    width: "8px",
-                    height: "8px",
-                    backgroundColor: "red",
-                    borderRadius: "50%",
-                  }}
-                />
-              )}
+              <AnimatePresence>
+                {isLogoHovered && (
+                  <motion.div
+                    className="absolute"
+                    style={{
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: "8px",
+                      height: "8px",
+                      backgroundColor: "red",
+                      borderRadius: "50%",
+                    }}
+                    variants={dotVariants}
+                    initial="initial"
+                    animate="hover"
+                    exit="initial" // Reverts to initial position on exit
+                  />
+                )}
+              </AnimatePresence>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               {menuItems.map((item) => (
