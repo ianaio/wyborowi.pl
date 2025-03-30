@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -13,6 +14,7 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout }: NavbarProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,50 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout }: NavbarProps) => {
     } catch (err: any) {
       setError(err.message || "Login failed");
     }
+  };
+
+  const menuItems = [
+    {
+      label: "WIRUTALNE SZKOLENIE BOJOWE",
+      svg: "/assets/combat-training.svg",
+      submenu: [
+        "SZKOLENIE BOJOWE Z PISTOLETEM",
+        "SZKOLENIE BOJOWE Z KARABINEM",
+        "SZKOLENIA BOJOWE BEZ BRONI",
+        "PRZYGOTOWANIE FIZYCZNE",
+      ],
+    },
+    {
+      label: "WIRTUALNE SZKOLENIE PILOTÓW DRONÓW BOJOWYCH",
+      svg: "/assets/drone-training.svg",
+      submenu: [],
+    },
+    {
+      label: "WIRTUALNE POZWOLENIE NA BROŃ",
+      svg: "/assets/permit.svg",
+      submenu: ["WIRTUALNE SZKOLENIE PSYCHOLOGÓW"],
+    },
+    {
+      label: "BROŃ PALNA",
+      svg: "/assets/firearm.svg",
+      submenu: ["PISTOLETY", "REWOLWERY", "KARABINY"],
+    },
+    {
+      label: "AMBASADOR",
+      svg: "/assets/ambassador.svg",
+      submenu: [],
+    },
+    {
+      label: "KONTAKT", // Fixed typo from "KONTACT"
+      svg: "/assets/contact.svg",
+      submenu: [],
+    },
+  ];
+
+  const submenuVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 0.9, y: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
   };
 
   return (
@@ -40,24 +86,42 @@ const Navbar = ({ isLoggedIn, onLogin, onLogout }: NavbarProps) => {
               />
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <a
-                href="#"
-                className="border-transparent text-gray-300 hover:border-orange-400 hover:text-orange-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium military-font"
-              >
-                Home
-              </a>
-              <a
-                href="#products"
-                className="border-transparent text-gray-300 hover:border-orange-400 hover:text-orange-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium military-font"
-              >
-                Products
-              </a>
-              <a
-                href="#menu"
-                className="border-transparent text-gray-300 hover:border-orange-400 hover:text-orange-400 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium military-font"
-              >
-                Menu
-              </a>
+              {menuItems.map((item) => (
+                <div
+                  key={item.label}
+                  className="relative"
+                  onMouseEnter={() => setOpenSubmenu(item.label)}
+                  onMouseLeave={() => setOpenSubmenu(null)}
+                >
+                  <div className="flex flex-col items-center px-1 pt-1 text-gray-300 hover:text-orange-400 military-font">
+                    <img src={item.svg} alt={item.label} className="h-6 w-6" />
+                    <span className="text-xs mt-1">{item.label}</span>
+                  </div>
+                  <AnimatePresence>
+                    {openSubmenu === item.label && item.submenu.length > 0 && (
+                      <motion.div
+                        className="absolute top-full left-0 mt-2 bg-military-dark rounded-lg shadow-lg z-10"
+                        variants={submenuVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                      >
+                        <div className="grid grid-cols-1 gap-2 p-4">
+                          {item.submenu.map((subItem) => (
+                            <a
+                              key={subItem}
+                              href={`#${subItem.toLowerCase().replace(/\s/g, "-")}`}
+                              className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font"
+                            >
+                              {subItem}
+                            </a>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
