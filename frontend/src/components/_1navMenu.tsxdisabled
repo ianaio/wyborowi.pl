@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const NavMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null); // For main submenus
-  const [openOdziezSubmenu, setOpenOdziezSubmenu] = useState<string | null>(null); // For Odzież toggle
 
   const menuItems = [
     {
@@ -70,6 +68,8 @@ const NavMenu = () => {
     },
   ];
 
+  const [hoveredSubmenu, setHoveredSubmenu] = useState<string | null>(null);
+
   // Variants for main menu toggle
   const menuVariants = {
     hidden: { opacity: 0, height: 0, transition: { duration: 0.3 } },
@@ -90,16 +90,10 @@ const NavMenu = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
   };
 
-  // Submenu variants (persistent like upper menu)
+  // Variants for hover submenus
   const submenuVariants = {
     hidden: { opacity: 0, width: 0 },
     visible: { opacity: 1, width: "auto", transition: { duration: 0.3 } },
-  };
-
-  // Toggle submenu variants for Odzież subcategories
-  const odziezToggleVariants = {
-    hidden: { opacity: 0, height: 0 },
-    visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
   };
 
   return (
@@ -121,7 +115,6 @@ const NavMenu = () => {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              onMouseLeave={() => setOpenSubmenu(null)} // Close submenus when leaving nav
             >
               {menuItems.map((item) => {
                 const variants =
@@ -143,7 +136,8 @@ const NavMenu = () => {
                     <a
                       href={item.href}
                       className="flex items-center space-x-2"
-                      onMouseEnter={() => setOpenSubmenu(item.label)}
+                      onMouseEnter={() => setHoveredSubmenu(item.label)}
+                      onMouseLeave={() => setHoveredSubmenu(null)}
                     >
                       <img src={item.svg} alt={item.label} className="h-5 w-5" />
                       <span className="text-gray-300 hover:text-orange-400 military-font">
@@ -151,7 +145,7 @@ const NavMenu = () => {
                       </span>
                     </a>
                     <AnimatePresence>
-                      {openSubmenu === item.label && item.submenu.length > 0 && (
+                      {hoveredSubmenu === item.label && item.submenu.length > 0 && (
                         <motion.div
                           className={`absolute ${
                             item.label === "BROŃ PALNA"
@@ -166,29 +160,34 @@ const NavMenu = () => {
                           exit="hidden"
                         >
                           <div className="p-4">
-                            {item.label === "ODZIEŻ" ? (
-                              <>
-                                {item.submenu.slice(0, 2).map((subItem) => (
-                                  <div key={subItem.label}>
-                                    <button
-                                      onClick={() =>
-                                        setOpenOdziezSubmenu(
-                                          openOdziezSubmenu === subItem.label ? null : subItem.label
-                                        )
-                                      }
-                                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap w-full text-left"
-                                    >
-                                      {subItem.label}
-                                    </button>
-                                    <AnimatePresence>
-                                      {openOdziezSubmenu === subItem.label && subItem.submenu && (
-                                        <motion.div
-                                          className="ml-4"
-                                          variants={odziezToggleVariants}
-                                          initial="hidden"
-                                          animate="visible"
-                                          exit="hidden"
-                                        >
+                            {item.submenu.map((subItem) => (
+                              <div
+                                key={subItem.label}
+                                className="relative"
+                                onMouseEnter={() =>
+                                  subItem.submenu && setHoveredSubmenu(`${item.label}-${subItem.label}`)
+                                }
+                                onMouseLeave={() =>
+                                  subItem.submenu && setHoveredSubmenu(item.label)
+                                }
+                              >
+                                <a
+                                  href={subItem.href}
+                                  className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
+                                >
+                                  {subItem.label}
+                                </a>
+                                <AnimatePresence>
+                                  {subItem.submenu &&
+                                    hoveredSubmenu === `${item.label}-${subItem.label}` && (
+                                      <motion.div
+                                        className="absolute left-full top-0 ml-2 bg-military-dark rounded-lg shadow-lg z-10"
+                                        variants={submenuVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="hidden"
+                                      >
+                                        <div className="p-4">
                                           {subItem.submenu.map((subSubItem) => (
                                             <a
                                               key={subSubItem.label}
@@ -198,32 +197,12 @@ const NavMenu = () => {
                                               {subSubItem.label}
                                             </a>
                                           ))}
-                                        </motion.div>
-                                      )}
-                                    </AnimatePresence>
-                                  </div>
-                                ))}
-                                {item.submenu.slice(2).map((subItem) => (
-                                  <a
-                                    key={subItem.label}
-                                    href={subItem.href}
-                                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
-                                  >
-                                    {subItem.label}
-                                  </a>
-                                ))}
-                              </>
-                            ) : (
-                              item.submenu.map((subItem) => (
-                                <a
-                                  key={subItem.label}
-                                  href={subItem.href}
-                                  className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
-                                >
-                                  {subItem.label}
-                                </a>
-                              ))
-                            )}
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                </AnimatePresence>
+                              </div>
+                            ))}
                           </div>
                         </motion.div>
                       )}
