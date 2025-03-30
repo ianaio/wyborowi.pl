@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 const NavMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null); // For main submenus
-  const [openOdziezSubmenu, setOpenOdziezSubmenu] = useState<string | null>(null); // For Odzież toggle
+  const [openOdziezSubmenu, setOpenOdziezSubmenu] = useState<string | null>(null); // For Kobiety/Mężczyźni toggle
+  const [isObuwieOpen, setIsObuwieOpen] = useState(false); // For Obuwie toggle
 
   const menuItems = [
     {
@@ -90,14 +91,8 @@ const NavMenu = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
   };
 
-  // Submenu variants (persistent like upper menu)
+  // Submenu variants
   const submenuVariants = {
-    hidden: { opacity: 0, width: 0 },
-    visible: { opacity: 1, width: "auto", transition: { duration: 0.3 } },
-  };
-
-  // Toggle submenu variants for Odzież subcategories
-  const odziezToggleVariants = {
     hidden: { opacity: 0, height: 0 },
     visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
   };
@@ -121,7 +116,6 @@ const NavMenu = () => {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              onMouseLeave={() => setOpenSubmenu(null)} // Close submenus when leaving nav
             >
               {menuItems.map((item) => {
                 const variants =
@@ -140,16 +134,15 @@ const NavMenu = () => {
                     animate="visible"
                     exit="hidden"
                   >
-                    <a
-                      href={item.href}
-                      className="flex items-center space-x-2"
-                      onMouseEnter={() => setOpenSubmenu(item.label)}
+                    <button
+                      onClick={() =>
+                        setOpenSubmenu(openSubmenu === item.label ? null : item.label)
+                      }
+                      className="flex items-center space-x-2 text-gray-300 hover:text-orange-400 military-font"
                     >
                       <img src={item.svg} alt={item.label} className="h-5 w-5" />
-                      <span className="text-gray-300 hover:text-orange-400 military-font">
-                        {item.label}
-                      </span>
-                    </a>
+                      <span>{item.label}</span>
+                    </button>
                     <AnimatePresence>
                       {openSubmenu === item.label && item.submenu.length > 0 && (
                         <motion.div
@@ -168,50 +161,81 @@ const NavMenu = () => {
                           <div className="p-4">
                             {item.label === "ODZIEŻ" ? (
                               <>
-                                {item.submenu.slice(0, 2).map((subItem) => (
-                                  <div key={subItem.label}>
-                                    <button
-                                      onClick={() =>
-                                        setOpenOdziezSubmenu(
-                                          openOdziezSubmenu === subItem.label ? null : subItem.label
-                                        )
-                                      }
-                                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap w-full text-left"
+                                {item.submenu.map((subItem) =>
+                                  subItem.label === "OBUWIE" ? (
+                                    <div key={subItem.label}>
+                                      <button
+                                        onClick={() => setIsObuwieOpen(!isObuwieOpen)}
+                                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap w-full text-left"
+                                      >
+                                        {subItem.label}
+                                      </button>
+                                      <AnimatePresence>
+                                        {isObuwieOpen && subItem.submenu && (
+                                          <motion.div
+                                            className="ml-4"
+                                            variants={submenuVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="hidden"
+                                          >
+                                            {subItem.submenu.map((subSubItem) => (
+                                              <a
+                                                key={subSubItem.label}
+                                                href={subSubItem.href}
+                                                className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
+                                              >
+                                                {subSubItem.label}
+                                              </a>
+                                            ))}
+                                          </motion.div>
+                                        )}
+                                      </AnimatePresence>
+                                    </div>
+                                  ) : subItem.label === "KOBIETY" || subItem.label === "MĘŻCZYŹNI" ? (
+                                    <div key={subItem.label}>
+                                      <button
+                                        onClick={() =>
+                                          setOpenOdziezSubmenu(
+                                            openOdziezSubmenu === subItem.label ? null : subItem.label
+                                          )
+                                        }
+                                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap w-full text-left"
+                                      >
+                                        {subItem.label}
+                                      </button>
+                                      <AnimatePresence>
+                                        {openOdziezSubmenu === subItem.label && subItem.submenu && (
+                                          <motion.div
+                                            className="ml-4"
+                                            variants={submenuVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="hidden"
+                                          >
+                                            {subItem.submenu.map((subSubItem) => (
+                                              <a
+                                                key={subSubItem.label}
+                                                href={subSubItem.href}
+                                                className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
+                                              >
+                                                {subSubItem.label}
+                                              </a>
+                                            ))}
+                                          </motion.div>
+                                        )}
+                                      </AnimatePresence>
+                                    </div>
+                                  ) : (
+                                    <a
+                                      key={subItem.label}
+                                      href={subItem.href}
+                                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
                                     >
                                       {subItem.label}
-                                    </button>
-                                    <AnimatePresence>
-                                      {openOdziezSubmenu === subItem.label && subItem.submenu && (
-                                        <motion.div
-                                          className="ml-4"
-                                          variants={odziezToggleVariants}
-                                          initial="hidden"
-                                          animate="visible"
-                                          exit="hidden"
-                                        >
-                                          {subItem.submenu.map((subSubItem) => (
-                                            <a
-                                              key={subSubItem.label}
-                                              href={subSubItem.href}
-                                              className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
-                                            >
-                                              {subSubItem.label}
-                                            </a>
-                                          ))}
-                                        </motion.div>
-                                      )}
-                                    </AnimatePresence>
-                                  </div>
-                                ))}
-                                {item.submenu.slice(2).map((subItem) => (
-                                  <a
-                                    key={subItem.label}
-                                    href={subItem.href}
-                                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
-                                  >
-                                    {subItem.label}
-                                  </a>
-                                ))}
+                                    </a>
+                                  )
+                                )}
                               </>
                             ) : (
                               item.submenu.map((subItem) => (

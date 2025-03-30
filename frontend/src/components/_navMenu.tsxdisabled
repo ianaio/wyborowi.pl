@@ -3,16 +3,103 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const NavMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null); // For main submenus
+  const [openOdziezSubmenu, setOpenOdziezSubmenu] = useState<string | null>(null); // For Odzież toggle
 
   const menuItems = [
-    { label: "BROŃ PALNA", svg: "/assets/firearm.svg", href: "#bron-palna" },
-    { label: "ODZIEŻ", svg: "/assets/clothing.svg", href: "#odziez" },
-    { label: "AKCESORIA", svg: "/assets/accessories.svg", href: "#akcesoria" },
+    {
+      label: "BROŃ PALNA",
+      svg: "/assets/firearm.svg",
+      href: "#bron-palna",
+      submenu: [
+        { label: "PISTOLETY", href: "#pistolety" },
+        { label: "REWOLWERY", href: "#rewolwery" },
+        { label: "KARABINY", href: "#karabiny" },
+      ],
+    },
+    {
+      label: "ODZIEŻ",
+      svg: "/assets/clothing.svg",
+      href: "#odziez",
+      submenu: [
+        {
+          label: "KOBIETY",
+          href: "#kobiety",
+          submenu: [
+            { label: "KOSZULKI", href: "#kobiety-koszulki" },
+            { label: "DŁUGIE RĘKAWY", href: "#kobiety-dlugie-rekawy" },
+            { label: "TANKS", href: "#kobiety-tanks" },
+            { label: "SPODNIE I SPODENKI", href: "#kobiety-spodnie" },
+          ],
+        },
+        {
+          label: "MĘŻCZYŹNI",
+          href: "#mezczyzni",
+          submenu: [
+            { label: "KOSZULKI", href: "#mezczyzni-koszulki" },
+            { label: "DŁUGIE RĘKAWY", href: "#mezczyzni-dlugie-rekawy" },
+            { label: "BLUZY", href: "#mezczyzni-bluzy" },
+            { label: "JEANS I SPODNIE", href: "#mezczyzni-jeans" },
+            { label: "KOSZULE", href: "#mezczyzni-koszule" },
+            { label: "TANKS", href: "#mezczyzni-tanks" },
+            { label: "SZORTY", href: "#mezczyzni-szorty" },
+          ],
+        },
+        {
+          label: "OBUWIE",
+          href: "#obuwie",
+          submenu: [
+            { label: "SNEAKERSY", href: "#sneakersy" },
+            { label: "BUTY", href: "#buty" },
+            { label: "KLAPKI", href: "#klapki" },
+            { label: "WKŁADKI DO BUTÓW", href: "#wkladki" },
+          ],
+        },
+        { label: "BLUZY ZADANIOWE", href: "#bluzy-zadaniowe" },
+        { label: "PAKIETY MYSTERY", href: "#pakiety-mystery" },
+        { label: "CZAPKI I CZAPECZKI", href: "#czapki" },
+        { label: "BIELIZNA", href: "#bielizna" },
+        { label: "SKARPETKI", href: "#skarpety" },
+      ],
+    },
+    {
+      label: "AKCESORIA",
+      svg: "/assets/accessories.svg",
+      href: "#akcesoria",
+      submenu: [{ label: "PASY BOJOWE", href: "#pasy-bojowe" }],
+    },
   ];
 
+  // Variants for main menu toggle
   const menuVariants = {
     hidden: { opacity: 0, height: 0, transition: { duration: 0.3 } },
     visible: { opacity: 0.8, height: "auto", transition: { duration: 0.3 } },
+  };
+
+  // Directional variants for each category
+  const bronPalnaVariants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+  };
+  const odziezVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
+  const akcesoriaVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+  };
+
+  // Submenu variants (persistent)
+  const submenuVariants = {
+    hidden: { opacity: 0, width: 0 },
+    visible: { opacity: 1, width: "auto", transition: { duration: 0.3 } },
+  };
+
+  // Toggle submenu variants for Odzież subcategories
+  const odziezToggleVariants = {
+    hidden: { opacity: 0, height: 0 },
+    visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
   };
 
   return (
@@ -23,7 +110,7 @@ const NavMenu = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="text-gray-300 hover:text-orange-400 px-4 py-2 rounded-md military-font"
           >
-            {isOpen ? "Ukryj Sklep" : "Sklep"} {/* Changed to Sklep */}
+            {isOpen ? "Ukryj Sklep" : "Sklep"}
           </button>
         </div>
         <AnimatePresence>
@@ -34,19 +121,116 @@ const NavMenu = () => {
               initial="hidden"
               animate="visible"
               exit="hidden"
+              onMouseLeave={() => setOpenSubmenu(null)} // Close submenus when leaving nav
             >
-              {menuItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="flex items-center space-x-2" // Added space-x-2 for spacing between icon and text
-                >
-                  <img src={item.svg} alt={item.label} className="h-5 w-5" />
-                  <span className="text-gray-300 hover:text-orange-400 military-font">
-                    {item.label} {/* Added text on the right */}
-                  </span>
-                </a>
-              ))}
+              {menuItems.map((item) => {
+                const variants =
+                  item.label === "BROŃ PALNA"
+                    ? bronPalnaVariants
+                    : item.label === "ODZIEŻ"
+                    ? odziezVariants
+                    : akcesoriaVariants;
+
+                return (
+                  <motion.div
+                    key={item.label}
+                    className="relative"
+                    variants={variants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                  >
+                    <a
+                      href={item.href}
+                      className="flex items-center space-x-2"
+                      onMouseEnter={() => setOpenSubmenu(item.label)}
+                    >
+                      <img src={item.svg} alt={item.label} className="h-5 w-5" />
+                      <span className="text-gray-300 hover:text-orange-400 military-font">
+                        {item.label}
+                      </span>
+                    </a>
+                    <AnimatePresence>
+                      {openSubmenu === item.label && item.submenu.length > 0 && (
+                        <motion.div
+                          className={`absolute ${
+                            item.label === "BROŃ PALNA"
+                              ? "right-full top-0 mr-2"
+                              : item.label === "ODZIEŻ"
+                              ? "top-full left-0 mt-2"
+                              : "left-full top-0 ml-2"
+                          } bg-military-dark rounded-lg shadow-lg z-10`}
+                          variants={submenuVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                        >
+                          <div className="p-4">
+                            {item.label === "ODZIEŻ" ? (
+                              <>
+                                {item.submenu.slice(0, 3).map((subItem) => ( // Extended to include OBUWIE
+                                  <div key={subItem.label}>
+                                    <button
+                                      onClick={() =>
+                                        setOpenOdziezSubmenu(
+                                          openOdziezSubmenu === subItem.label ? null : subItem.label
+                                        )
+                                      }
+                                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap w-full text-left"
+                                    >
+                                      {subItem.label}
+                                    </button>
+                                    <AnimatePresence>
+                                      {openOdziezSubmenu === subItem.label && subItem.submenu && (
+                                        <motion.div
+                                          className="ml-4"
+                                          variants={odziezToggleVariants}
+                                          initial="hidden"
+                                          animate="visible"
+                                          exit="hidden"
+                                        >
+                                          {subItem.submenu.map((subSubItem) => (
+                                            <a
+                                              key={subSubItem.label}
+                                              href={subSubItem.href}
+                                              className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
+                                            >
+                                              {subSubItem.label}
+                                            </a>
+                                          ))}
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
+                                  </div>
+                                ))}
+                                {item.submenu.slice(3).map((subItem) => (
+                                  <a
+                                    key={subItem.label}
+                                    href={subItem.href}
+                                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
+                                  >
+                                    {subItem.label}
+                                  </a>
+                                ))}
+                              </>
+                            ) : (
+                              item.submenu.map((subItem) => (
+                                <a
+                                  key={subItem.label}
+                                  href={subItem.href}
+                                  className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-orange-400 rounded-lg military-font whitespace-nowrap"
+                                >
+                                  {subItem.label}
+                                </a>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
             </motion.nav>
           )}
         </AnimatePresence>
