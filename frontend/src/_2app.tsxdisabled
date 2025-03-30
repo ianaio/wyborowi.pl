@@ -23,7 +23,7 @@ const App = () => {
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [showLoginForm, setShowLoginForm] = useState(false);
-  const [loginTimeout, setLoginTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [loginTimeout, setLoginTimeout] = useState<NodeJS.Timeout | null>(null); // New state for timeout
 
   const soldierBg = "/assets/soldier-bg.svg";
   const rifleSvg = "/assets/rifle.svg";
@@ -114,46 +114,39 @@ const App = () => {
   const handleMouseOver = (field: "email" | "password") => {
     if (field === "email" && email === "Login") setEmail("");
     if (field === "password" && password === "Password") setPassword("");
-    resetLoginTimeout();
+    resetLoginTimeout(); // Reset timer on interaction
   };
 
+  // New function to start or reset the 10-second timeout
   const resetLoginTimeout = () => {
-    if (loginTimeout) clearTimeout(loginTimeout);
+    if (loginTimeout) clearTimeout(loginTimeout); // Clear existing timeout
     const newTimeout = setTimeout(() => {
-      setShowLoginForm(false);
-      setEmail("");
-      setPassword("");
-      setError("");
-    }, 10000);
+      setShowLoginForm(false); // Revert to frontpage content after 10 seconds
+      setEmail(""); // Clear email field
+      setPassword(""); // Clear password field
+      setError(""); // Clear any error
+    }, 10000); // 10 seconds
     setLoginTimeout(newTimeout);
   };
 
-  const handleInputChange = (setter: (value: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
-    resetLoginTimeout();
-  };
-
-  // New function to reset to homepage content
-  const handleReturnToHome = () => {
-    setShowLoginForm(false);
-    setEmail("");
-    setPassword("");
-    setError("");
-    if (loginTimeout) clearTimeout(loginTimeout); // Clear timeout if active
-    setLoginTimeout(null);
-  };
-
+  // Start the timeout when the login form appears
   useEffect(() => {
     if (showLoginForm) {
       resetLoginTimeout();
     } else if (loginTimeout) {
-      clearTimeout(loginTimeout);
+      clearTimeout(loginTimeout); // Clear timeout when form is hidden
       setLoginTimeout(null);
     }
     return () => {
-      if (loginTimeout) clearTimeout(loginTimeout);
+      if (loginTimeout) clearTimeout(loginTimeout); // Cleanup on unmount
     };
   }, [showLoginForm]);
+
+  // Reset timeout on any input change
+  const handleInputChange = (setter: (value: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setter(e.target.value);
+    resetLoginTimeout(); // Reset timer on input change
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -191,7 +184,6 @@ const App = () => {
         isLoggedIn={isLoggedIn}
         onLogin={() => setShowLoginForm(true)}
         onLogout={handleLogout}
-        onLogoClick={handleReturnToHome} // Pass the reset function to Navbar
       />
 
       <main className="flex-grow">
@@ -293,7 +285,7 @@ const App = () => {
                     <input
                       type="text"
                       value={email}
-                      onChange={handleInputChange(setEmail)}
+                      onChange={handleInputChange(setEmail)} // Updated to reset timeout
                       onMouseOver={() => handleMouseOver("email")}
                       className="text-5xl md:text-7xl military-font bg-transparent border-b border-gray-500 focus:outline-none mb-4 text-white w-full"
                       placeholder="Login"
@@ -303,7 +295,7 @@ const App = () => {
                     <input
                       type="password"
                       value={password}
-                      onChange={handleInputChange(setPassword)}
+                      onChange={handleInputChange(setPassword)} // Updated to reset timeout
                       onMouseOver={() => handleMouseOver("password")}
                       className="text-lg bg-transparent border-b border-gray-500 focus:outline-none w-full text-white"
                       placeholder="Password"
