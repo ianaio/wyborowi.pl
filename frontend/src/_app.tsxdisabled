@@ -5,7 +5,6 @@ import ProductCard from "./components/ProductCard";
 import Footer from "./components/Footer";
 import Menu from "./components/Menu";
 import NavMenu from "./components/NavMenu";
-import Sklep from "./components/Sklep"; // Import new component
 
 interface Product {
   id: number;
@@ -22,11 +21,52 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [loginTimeout, setLoginTimeout] = useState<NodeJS.Timeout | null>(null);
-  const loginInputRef = useRef<HTMLInputElement>(null);
+  const loginInputRef = useRef<HTMLInputElement>(null); // Ref for Zaloguj input
 
   const soldierBg = "/assets/soldier-bg.svg";
+  const rifleSvg = "/assets/rifle.svg";
+  const watchSvg = "/assets/watch.svg";
+  const glovesSvg = "/assets/gloves.svg";
+  const gogglesSvg = "/assets/goggles.svg";
+  const capSvg = "/assets/cap.svg";
+  const hoodieSvg = "/assets/hoodie.svg";
+  const tshirtSvg = "/assets/tshirt.svg";
+
+  const getProductSvg = (title: string) => {
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes("rifle") || lowerTitle.includes("karabin")) return rifleSvg;
+    if (lowerTitle.includes("goggles") || lowerTitle.includes("night vision")) return gogglesSvg;
+    if (lowerTitle.includes("watch") || lowerTitle.includes("timepiece")) return watchSvg;
+    if (lowerTitle.includes("gloves") || lowerTitle.includes("combat gloves")) return glovesSvg;
+    if (lowerTitle.includes("czapka")) return capSvg;
+    if (lowerTitle.includes("bluza")) return hoodieSvg;
+    if (lowerTitle.includes("koszulka")) return tshirtSvg;
+    if (lowerTitle.includes("pakiet") || lowerTitle.includes("wirtualny")) return rifleSvg;
+    return rifleSvg;
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      const data = await response.json();
+      const parsedProducts = data.map((product: Product) => ({
+        ...product,
+        price: Number(product.price),
+        sale_price: product.sale_price ? Number(product.sale_price) : undefined,
+      }));
+      setProducts(parsedProducts);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch products");
+      console.error("Products fetch error:", err);
+    }
+  };
 
   const handleLogin = async (email: string, password: string) => {
     try {
@@ -46,6 +86,7 @@ const App = () => {
         setEmail(email);
         setError("");
         setShowLoginForm(false);
+        await fetchProducts();
       } else {
         setError("No token received");
       }
@@ -62,6 +103,7 @@ const App = () => {
     setPassword("");
     setMessage("");
     setError("");
+    setProducts([]);
     setShowLoginForm(false);
   };
 
@@ -101,6 +143,7 @@ const App = () => {
     setLoginTimeout(null);
   };
 
+  // Focus the Zaloguj input when the login form appears
   useEffect(() => {
     if (showLoginForm && loginInputRef.current) {
       loginInputRef.current.focus();
@@ -120,6 +163,7 @@ const App = () => {
   }, [showLoginForm]);
 
   useEffect(() => {
+    fetchProducts();
     const token = localStorage.getItem("token");
     if (token) {
       fetch("/api/verify-token", {
@@ -133,6 +177,7 @@ const App = () => {
         .then((data) => {
           setIsLoggedIn(true);
           setEmail(data.email || "");
+          fetchProducts();
         })
         .catch((err) => {
           console.error("Token validation failed:", err);
@@ -180,9 +225,62 @@ const App = () => {
 
             <NavMenu />
 
-            <Sklep isLoggedIn={isLoggedIn} /> {/* Replace old section */}
+            <section className="p-10">
+              <h2 className="text-3xl military-font mb-6">Dark Mode & Product</h2>
+              {message ? (
+                <p className="text-white mt-4">{message}</p>
+              ) : (
+                <div className="mt-6">
+                  {products.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {products.map((product) => (
+                        <div key={product.id} className="product-card">
+                          {product.video_url ? (
+                            <video
+                              src={product.video_url}
+                              className="w-full h-48 object-cover rounded-lg"
+                              muted
+                              loop
+                              autoPlay
+                              playsInline
+                            />
+                          ) : (
+                            <img
+                              src={getProductSvg(product.title)}
+                              alt={product.title}
+                              className="w-full h-48 object-contain rounded-lg"
+                            />
+                          )}
+                          <h3
+                            className={`text-xl military-font mt-4 ${
+                              product.type === "course" || product.type === "bundle"
+                                ? "text-blue-400"
+                                : "text-orange-400"
+                            }`}
+                          >
+                            {product.title}
+                          </h3>
+                          <p className="text-gray-400">
+                            {(product.sale_price || product.price).toFixed(2)} PLN
+                            {product.sale_price && (
+                              <span className="text-gray-600 line-through ml-2">
+                                {product.price.toFixed(2)} PLN
+                              </span>
+                            )}
+                          </p>
+                          <CheckoutButton productId={product.id} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-white">No products available.</p>
+                  )}
+                  {error && <p className="text-red-500 mt-4">{error}</p>}
+                </div>
+              )}
+            </section>
 
-            <Menu products={[]} /> {/* Update if Menu needs products */}
+            <Menu products={products} />
           </>
         ) : (
           <>
@@ -200,13 +298,13 @@ const App = () => {
                 <form onSubmit={handleSubmit} className="w-full md:w-1/2">
                   <div className="mb-4">
                     <input
-                      ref={loginInputRef}
+                      ref={loginInputRef} // Attach ref to Zaloguj input
                       type="text"
                       value={email}
                       onChange={handleInputChange(setEmail)}
                       onMouseOver={() => handleMouseOver("email")}
                       className="text-5xl md:text-7xl military-font bg-transparent border-b border-gray-500 focus:outline-none mb-4 text-white w-full"
-                      placeholder="Zaloguj"
+                      placeholder="Zaloguj" // Changed to Zaloguj
                     />
                   </div>
                   <div className="mb-4">
@@ -216,7 +314,7 @@ const App = () => {
                       onChange={handleInputChange(setPassword)}
                       onMouseOver={() => handleMouseOver("password")}
                       className="text-lg bg-transparent border-b border-gray-500 focus:outline-none w-full text-white"
-                      placeholder="Hasło"
+                      placeholder="Hasło" // Changed to Hasło
                     />
                   </div>
                   {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
@@ -249,9 +347,21 @@ const App = () => {
 
             <NavMenu />
 
-            <Sklep isLoggedIn={isLoggedIn} /> {/* Replace old section */}
+            <section className="p-10">
+              <h2 className="text-3xl military-font mb-6">Dark Mode & Product</h2>
+              {products.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-white text-center">Ładowanie produktów...</p>
+              )}
+              {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+            </section>
 
-            <Menu products={[]} /> {/* Update if Menu needs products */}
+            <Menu products={products} />
           </>
         )}
       </main>

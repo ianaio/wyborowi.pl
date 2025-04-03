@@ -149,6 +149,31 @@ COPY public.payments (id, user_id, amount, currency, status, payment_intent_id, 
 18	\N	74.50	pln	pending	\N	2025-03-23 19:24:30.241498	cichy96@gmail.com	3	cs_test_a1DVDUbK2dtD7tlIPiROylTlYo73a1jaPfuO4RnWn2IMGIcrA1rdUm0aJn
 19	\N	74.50	pln	pending	\N	2025-03-23 19:26:45.010853	cichy96@gmail.com	3	cs_test_a1fdlEyWtRrnLBKjeRt5t4kNtBaqBLF6Eqru2MKcXuK02JkqcS81kYQcCf
 20	\N	74.50	pln	pending	\N	2025-03-23 19:55:04.454578	cichy96@gmail.com	3	cs_test_a1R0OCLqTVqBloZHWLAEwp3M0DlZpqIpd6mVqY7DPwu9yvOfW3EQLvX8ev
+21	\N	74.50	pln	pending	\N	2025-03-23 22:14:08.570964	cichy96@gmail.com	3	cs_test_a1GIKsh0vXASJF41C3U9y2CxFeWsX2twH87zTke4R2j1tR0eYBkK8djr8A
+22	\N	74.50	pln	pending	\N	2025-03-24 20:42:41.304944	cichy96@gmail.com	3	cs_test_a1ko1rL1OtbkElqE7Em3458WuqDPtPswHSiYaiH7XsOh0j0HDetj09E6Vj
+23	\N	74.50	pln	pending	\N	2025-03-24 22:03:21.743658	cichy96@gmail.com	3	cs_test_a1xVHbN3fQiW2JrrbhSUO4QQMV5zhtJwQ5aLPq6kY12zMl5me9A0tWcC47
+24	\N	34.00	pln	pending	\N	2025-03-25 09:42:45.439882	cichy96@gmail.com	1	cs_test_a1Z7gg4EOzzESKBNFz8cd6ZBz4IRQgdEL2ooJRf0So83bKZdkikdwQss3P
+26	\N	34.00	pln	pending	\N	2025-03-25 09:42:46.384316	cichy96@gmail.com	1	cs_test_a1Dwhezwatjhd3qIhwBfLrSQu7itRpAtN2jTy3MoOxsAQ0oKgjVNJislq2
+25	\N	34.00	pln	pending	\N	2025-03-25 09:42:46.381537	cichy96@gmail.com	1	cs_test_a1nvC3Z8nYhHF23GbkD6uiDziSdvaSiC1TFO2QhSQNVLKCjZytOVtqySnI
+27	\N	34.00	pln	pending	\N	2025-03-25 09:42:46.509108	cichy96@gmail.com	1	cs_test_a18d9kLYQ1ZgijwdtBmpC5n1lmF0Dpu2tjnbZjVycrNO2l5IuoRQgL2PQw
+28	\N	34.00	pln	pending	\N	2025-03-25 09:42:46.554331	cichy96@gmail.com	1	cs_test_a1BAU7CWCNWFAG0sNqGd1YxgYIfyxLuC0lVSTyaVAxPC8acEqxoD6j426U
+29	\N	34.00	pln	pending	\N	2025-03-25 09:42:47.370629	cichy96@gmail.com	1	cs_test_a1FndGmS9UUQ0hP4suQwe5jyHYAviwWvThpgW7TaCB2fA6GgNJMTrveYX3
+30	\N	34.00	pln	pending	\N	2025-03-25 09:42:47.382485	cichy96@gmail.com	1	cs_test_a1z9ZvhGU0iCoZOlDdtgdKzOjf50LxvLN7vxtZtuzT0mkE4liPCakp6U5v
+31	\N	34.00	pln	pending	\N	2025-03-25 09:42:47.443471	cichy96@gmail.com	1	cs_test_a1nGKlY8NWysdScbKYgmUsLnYSC9ydzfQq6HAwUERYx79UiCp1AsNouthU
+32	\N	34.00	pln	pending	\N	2025-03-25 09:42:47.676754	cichy96@gmail.com	1	cs_test_a1Y4cUCoU0ejaO9IhxeOuV1cuvXzxGRDlMz2ACQNLUCTIG7Q8Of0iI3hgI
+33	\N	34.00	pln	pending	\N	2025-03-25 09:42:47.748565	cichy96@gmail.com	1	cs_test_a19KCu9Nz3NnaZ29H4beCzpuaHfP7jmHMyVpazw3glJcoHk6YEvmZsHCWX
+34	\N	34.00	pln	pending	\N	2025-03-25 09:42:48.513909	cichy96@gmail.com	1	cs_test_a1XFcXRz7jHnVudFe6RjG1KkXYCczsKfnn2EYplOH9BePKa1GYjqZTuixe
+35	\N	34.00	pln	pending	\N	2025-03-25 09:42:48.517023	cichy96@gmail.com	1	cs_test_a1nlt2XxCSgeCJXPqsbmMxx1Tlb37QZ8RSqsdGMlYHCrq1fTWqp3IwlQt1
+37	\N	34.00	pln	pending	\N	2025-03-25 09:42:48.520316	cichy96@gmail.com	1	cs_test_a1kRO61atNzfN7Dw6hm6T55qGSTfCCbwwO9KlHn9QP1JvwGs5KHQzIhxbp
+36	\N	34.00	pln	pending	\N	2025-03-25 09:42:48.518892	cichy96@gmail.com	1	cs_test_a1LhhF0fGLkCVvDAPoa9nlLxakk3LBuj5Ol3Wss66PmDEb7VmcQZ3HuqIE
+38	\N	65.00	pln	pending	\N	2025-03-25 09:45:52.912712	cichy96@gmail.com	2	cs_test_a1XWrIyGZTl9oOVv4H13rQqoRGlebxlPXNdmoOJ5h4N61olkhnnQX92WLB
+39	\N	74.50	pln	pending	\N	2025-03-25 09:47:41.907555	cichy96@gmail.com	5	cs_test_a15koJK2K5rrAxSsGmCSHGUiYZBdAuYK8ZpwbOKHBfjHnwCjvdAZ2W7wBK
+40	\N	65.00	pln	pending	\N	2025-03-26 11:16:26.387988	cichy96@gmail.com	10	cs_test_a1Rcjd3fESBTn5AK6B9D3t8a7A9rydmp1rONFS6Tu3fkZYbSTkNDnK4S3L
+41	\N	65.00	pln	pending	\N	2025-03-26 11:16:27.106798	cichy96@gmail.com	10	cs_test_a1OVqZONhksP8BnJkJSMJBPdVWQXuRlbCFKuMsjUs6GULGhhjD3XqH88mQ
+42	\N	65.00	pln	pending	\N	2025-03-26 11:16:27.151509	cichy96@gmail.com	10	cs_test_a1fyFSDwIVriHXFTf0YdfirnX0FjhYnxSxBziH4DkjwXXXwT3mVBCxd1wp
+43	\N	74.50	pln	pending	\N	2025-03-26 11:26:11.12364	cichy96@gmail.com	5	cs_test_a1TtxG1ggqZOLlsKI3iMM4QxO4B2MbvGPdeXX393Evu8gGL0GEnXHaluOF
+44	\N	74.50	pln	pending	\N	2025-03-28 23:49:54.722344	cichy96@gmail.com	3	cs_test_a1KW3CGWZw0L4NslJQzwMzzX5YjnDdniEsMYIcuX6GcqyyytTCvpa4CdZF
+45	\N	124.50	pln	pending	\N	2025-03-31 10:01:21.462602	cichy96@gmail.com	6	cs_test_a1JrLAoWJVQtwYDlmYMycn0c1vbcvsQcgKTaKlbXIhoHsBODVdedawVUMQ
 \.
 
 
@@ -183,7 +208,7 @@ COPY public.users (id, email, password, created_at) FROM stdin;
 -- Name: payments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.payments_id_seq', 20, true);
+SELECT pg_catalog.setval('public.payments_id_seq', 45, true);
 
 
 --
